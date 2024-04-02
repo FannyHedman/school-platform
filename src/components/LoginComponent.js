@@ -1,32 +1,75 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useLanguage } from '../components/language/LanguageContext'
+// import { useNavigate } from 'react-router-dom';
+import axios from 'axios'
 import en from '../components/language/languages/EN.json'
 import se from '../components/language/languages/SE.json'
 import styled from 'styled-components'
 
-
 const LoginComponent = () => {
-
-  const { language } = useLanguage()
+    const { language } = useLanguage()
     const lang = language === 'se' ? se : en
+
+    const [account, setAccount] = useState({
+        username: '',
+        password: ''
+    })
+
+    const [error, setError] = useState(false)
+    // const navigate=useNavigate()
+
+    const handleChange = (e) => {
+        setAccount((prev) => ({ ...prev, [e.target.name]: e.target.value }))
+    }
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        try {
+            const response = await axios.post(
+                `http://localhost:8800/accounts`,
+                account
+            )
+            //  navigate(`/profile/${id}`)
+            console.log('logged in successfully')
+        } catch (err) {
+            console.log(err)
+            setError(true)
+        }
+    }
 
     return (
         <div style={{ marginTop: '100px' }}>
             <Container>
                 <LeftDiv>
-                  <LeftDivContainer><Heading>{lang.startpage_title}</Heading></LeftDivContainer>
+                    <LeftDivContainer>
+                        <Heading>{lang.startpage_title}</Heading>
+                    </LeftDivContainer>
                 </LeftDiv>
                 <RightDiv>
-                <LoginContainer>
-            <h1>Login</h1>
-            <Form>
-                <Label htmlFor="email">{lang.login_email}</Label>
-                <Input type="email" id="email" name="email" required />
-                <Label htmlFor="password">{lang.login_password}</Label>
-                <Input type="password" id="password" name="password" required />
-                <Button type="submit">{lang.login_login}</Button>
-            </Form>
-        </LoginContainer>
+                    <LoginContainer>
+                        <h1>Login</h1>
+                        <Form onSubmit={handleSubmit}>
+                            <Label htmlFor="email">{lang.login_email}</Label>
+                            <Input
+                                onChange={handleChange}
+                                type="text"
+                                id="username"
+                                name="username"
+                                required
+                            />
+                            <Label htmlFor="password">
+                                {lang.login_password}
+                            </Label>
+                            <Input
+                                onChange={handleChange}
+                                type="password"
+                                id="password"
+                                name="password"
+                                required
+                            />
+                            <Button type="submit">{lang.login_login}</Button>
+                        </Form>
+                    </LoginContainer>
                 </RightDiv>
             </Container>
         </div>
@@ -63,16 +106,16 @@ const LoginContainer = styled.div`
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     text-align: center;
-`;
+`
 
 const Form = styled.form`
     display: flex;
     flex-direction: column;
-`;
+`
 
 const Label = styled.label`
     margin-bottom: 5px;
-`;
+`
 
 const Input = styled.input`
     width: 100%;
@@ -81,7 +124,7 @@ const Input = styled.input`
     border: 1px solid #ccc;
     border-radius: 3px;
     box-sizing: border-box;
-`;
+`
 
 const Button = styled.button`
     width: 100%;
@@ -96,4 +139,4 @@ const Button = styled.button`
     &:hover {
         background-color: #0056b3;
     }
-`;
+`
