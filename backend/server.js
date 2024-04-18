@@ -49,7 +49,7 @@ app.get('/accounts', async (req, res) => {
 })
 
 app.post('/accounts', async (req, res) => {
-    const { username, password } = req.body
+    const { username, password, } = req.body
     const values = [username, password]
 
     const account = await client.query(
@@ -69,46 +69,47 @@ app.post('/accounts', async (req, res) => {
 })
 
 app.get('/accounts/:id', async (req, res) => {
-    const { id } = req.params
+  const { id } = req.params;
 
-    try {
-        const account = await client.query(
-            'SELECT name, age, interest FROM accounts WHERE id = $1',
-            [id]
-        )
-        if (account.rows.length === 0) {
-            res.status(404).send('Not found')
-            return
-        }
+  try {
+      const account = await client.query(
+          'SELECT username, parent_name, first_child_name, second_child_name, third_child_name FROM accounts WHERE id = $1',
+          [id]
+      );
 
-        const { name, age, interest } = account.rows[0]
-        res.status(200).json({ name, age, interest })
-    } catch (error) {
-        console.error(error)
-        res.status(500)
-    }
-})
+      if (account.rows.length === 0) {
+          res.status(404).send('Account not found');
+          return;
+      }
 
-app.get('/accounts/:id/messages', async (req, res) => {
-    const { id } = req.params
-    console.log(id)
-    try {
-        const account = await client.query(
-            'SELECT * FROM accounts WHERE id NOT IN $1',
-            [id]
-        )
-        if (account.rows.length === 0) {
-            res.status(404).send('Not found')
-            return
-        }
+      const { username, parent_name, first_child_name, second_child_name, third_child_name} = account.rows[0];
+      res.status(200).json({ username, parent_name, first_child_name, second_child_name, third_child_name });
+  } catch (error) {
+      console.error('Error fetching account:', error);
+      res.status(500).send('Internal Server Error');
+  }
+});
 
-        const name = account.rows[0].name
-        res.status(200).json({ name })
-    } catch (error) {
-        console.error(error)
-        res.status(500)
-    }
-})
+// app.get('/accounts/:id/messages', async (req, res) => {
+//     const { id } = req.params
+//     console.log(id)
+//     try {
+//         const account = await client.query(
+//             'SELECT * FROM accounts WHERE id NOT IN $1',
+//             [id]
+//         )
+//         if (account.rows.length === 0) {
+//             res.status(404).send('Not found')
+//             return
+//         }
+
+//         const name = account.rows[0].name
+//         res.status(200).json({ name })
+//     } catch (error) {
+//         console.error(error)
+//         res.status(500)
+//     }
+// })
 
 app.listen(8800, () => {
     console.log('server is running')

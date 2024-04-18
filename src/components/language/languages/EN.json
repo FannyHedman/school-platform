@@ -6,5 +6,6 @@
   "startpage_title": "Everything school related",
   "login_email": "Email",
   "login_password": "Password",
-  "login_login": "Login"
+  "login_login": "Login",
+  "welcome_user": "Hello"
 }

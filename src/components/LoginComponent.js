@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useLanguage } from '../components/language/LanguageContext'
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import en from '../components/language/languages/EN.json'
 import se from '../components/language/languages/SE.json'
@@ -10,13 +10,15 @@ const LoginComponent = () => {
     const { language } = useLanguage()
     const lang = language === 'se' ? se : en
 
+
     const [account, setAccount] = useState({
+        id: '',
         username: '',
         password: ''
     })
 
     const [error, setError] = useState(false)
-    // const navigate=useNavigate()
+    const navigate=useNavigate()
 
     const handleChange = (e) => {
         setAccount((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -29,7 +31,9 @@ const LoginComponent = () => {
                 `http://localhost:8800/accounts`,
                 account
             )
-            //  navigate(`/profile/${id}`)
+
+            const id = response.data.id
+            navigate(`/profile/${id}`)
             console.log('logged in successfully')
         } catch (err) {
             console.log(err)
