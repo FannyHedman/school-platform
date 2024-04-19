@@ -72,44 +72,122 @@ app.get('/accounts/:id', async (req, res) => {
   const { id } = req.params;
 
   try {
-      const account = await client.query(
-          'SELECT username, parent_name, first_child_name, second_child_name, third_child_name FROM accounts WHERE id = $1',
+      const parentQuery = await client.query(
+          'SELECT username, parent_name FROM accounts WHERE id = $1',
           [id]
       );
 
-      if (account.rows.length === 0) {
-          res.status(404).send('Account not found');
+
+      const childrenQuery = await client.query(
+          'SELECT name, date_of_birth, school, child_id FROM children WHERE parent_id = $1',
+          [id]
+      );
+
+
+      if (parentQuery.rows.length === 0) {
+          res.status(404).send('User not found');
           return;
       }
 
-      const { username, parent_name, first_child_name, second_child_name, third_child_name} = account.rows[0];
-      res.status(200).json({ username, parent_name, first_child_name, second_child_name, third_child_name });
+
+      const userData = {
+          parent_name: parentQuery.rows[0].parent_name,
+          children: childrenQuery.rows.map(child => {
+              const today = new Date();
+              const birthDate = new Date(child.date_of_birth);
+              let age = today.getFullYear() - birthDate.getFullYear();
+              const monthDiff = today.getMonth() - birthDate.getMonth();
+              if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                  age--;
+              }
+
+              return {
+                id: child.child_id,
+                  name: child.name,
+                  age: age,
+                  school: child.school
+              };
+          })
+      };
+
+      res.status(200).json(userData);
   } catch (error) {
-      console.error('Error fetching account:', error);
+      console.error('Error fetching user profile:', error);
       res.status(500).send('Internal Server Error');
   }
 });
 
-// app.get('/accounts/:id/messages', async (req, res) => {
-//     const { id } = req.params
-//     console.log(id)
-//     try {
-//         const account = await client.query(
-//             'SELECT * FROM accounts WHERE id NOT IN $1',
-//             [id]
-//         )
-//         if (account.rows.length === 0) {
-//             res.status(404).send('Not found')
-//             return
-//         }
 
-//         const name = account.rows[0].name
-//         res.status(200).json({ name })
-//     } catch (error) {
-//         console.error(error)
-//         res.status(500)
-//     }
-// })
+
+
+// funkar ovan
+
+
+
+
+
+
+// app.get('/accounts/:id', async (req, res) => {
+//   const { id } = req.params;
+
+//   try {
+//       // Fetch parent data
+//       const parentQuery = await client.query(
+//           'SELECT username, parent_name FROM accounts WHERE id = $1',
+//           [id]
+//       );
+
+//       // Fetch children data including name, date of birth, and school
+//       const childrenQuery = await client.query(
+//           'SELECT id, name, date_of_birth, school FROM children WHERE parent_id = $1',
+//           [id]
+//       );
+
+//       if (parentQuery.rows.length === 0) {
+//           res.status(404).send('User not found');
+//           return;
+//       }
+
+//       // Fetch schedules for each child
+//       const childrenWithSchedules = await Promise.all(childrenQuery.rows.map(async (child) => {
+//           const scheduleQuery = await client.query(
+//               'SELECT day_of_week, start_time, end_time FROM child_schedules WHERE child_id = $1',
+//               [child.id]
+//           );
+//           return {
+//               ...child,
+//               schedule: scheduleQuery.rows
+//           };
+//       }));
+
+//       const userData = {
+//           parent_name: parentQuery.rows[0].parent_name,
+//           children: childrenWithSchedules.map(child => {
+//               // Calculate age based on date of birth
+//               const today = new Date();
+//               const birthDate = new Date(child.date_of_birth);
+//               let age = today.getFullYear() - birthDate.getFullYear();
+//               const monthDiff = today.getMonth() - birthDate.getMonth();
+//               if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+//                   age--;
+//               }
+
+//               return {
+//                   name: child.name,
+//                   age: age,
+//                   school: child.school,
+//                   schedule: child.schedule
+//               };
+//           })
+//       };
+
+//       res.status(200).json(userData);
+//   } catch (error) {
+//       console.error('Error fetching user profile:', error);
+//       res.status(500).send('Internal Server Error');
+//   }
+// });
+
 
 app.listen(8800, () => {
     console.log('server is running')
