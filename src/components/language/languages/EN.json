@@ -7,5 +7,34 @@
   "login_email": "Email",
   "login_password": "Password",
   "login_login": "Login",
-  "welcome_user": "Hello"
+  "welcome_user": "Hello",
+
+  "absence": "Absence",
+  "view_absence": "View absence",
+  "report_todays_abscent": "Report absence today",
+  "schedule_absence": "Schedule absence",
+  "schedule": "Schedule",
+  "change_schedule": "Change schedule",
+  "view_schedule": "View schedule",
+  "req_schedule": "Requested schedule",
+  "information_from_school": "Information from school",
+  "weekly_letter": "Weekly letter",
+  "important_dates": "Important dates",
+  "lunch_menu": "Lunch menu",
+  "contact_school": "Contacts",
+  "contact_teacher": "Teachers",
+  "contact_management": "School management",
+  "contact_health": "Student health care",
+  "contact_parents": "Parents",
+  "applications": "Applications",
+  "my_page": "My page",
+  "parent_contact_details": "My contact details",
+  "parent_children": "My children",
+  "parent_income": "My income",
+  "view_income": "View income",
+  "change_income": "Change income",
+  "fees": "Fees",
+  "howto_title": "How to use this site"
+
+
 }
