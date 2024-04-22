@@ -177,8 +177,8 @@ const UserProfile = () => {
                 {userData.children &&
                     userData.children.map((child, index) => (
                         <li key={index}>
-                            <Link to={`/childprofile/${child.id}`}>Name: {child.name}</Link>
-                            <p>Age: {child.age}</p>
+                            <Link to={`/childprofile/${child.id}/${child.schoolId}`}>Name: {child.name}</Link>
+                            <p>Age: {child.school_id}</p>
                             <p>School: {child.school}</p>
                         </li>
                     ))}

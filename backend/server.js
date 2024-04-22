@@ -79,7 +79,7 @@ app.get('/accounts/:id', async (req, res) => {
 
 
       const childrenQuery = await client.query(
-          'SELECT name, date_of_birth, school, child_id FROM children WHERE parent_id = $1',
+          'SELECT name, date_of_birth, school, child_id, school_id FROM children WHERE parent_id = $1',
           [id]
       );
 
@@ -105,7 +105,8 @@ app.get('/accounts/:id', async (req, res) => {
                 id: child.child_id,
                   name: child.name,
                   age: age,
-                  school: child.school
+                  school: child.school,
+                  schoolId: child.school_id
               };
           })
       };
@@ -118,6 +119,107 @@ app.get('/accounts/:id', async (req, res) => {
 });
 
 
+// app.get('/childprofile/:id', async (req, res) => {
+//   const { id } = req.params;
+
+//   try {
+
+//       const childrenQuery = await client.query(
+//           'SELECT name, date_of_birth, school, child_id FROM children WHERE child_id = $1',
+//           [id]
+//       );
+
+
+
+
+//       const userData = {
+//           children: childrenQuery.rows.map(child => {
+//               const today = new Date();
+//               const birthDate = new Date(child.date_of_birth);
+//               let age = today.getFullYear() - birthDate.getFullYear();
+//               const monthDiff = today.getMonth() - birthDate.getMonth();
+//               if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+//                   age--;
+//               }
+
+//               return {
+//                 id: child.child_id,
+//                   name: child.name,
+//                   age: age,
+//                   school: child.school
+//               };
+//           })
+//       };
+
+//       res.status(200).json(userData);
+//   } catch (error) {
+//       console.error('Error fetching user profile:', error);
+//       res.status(500).send('Internal Server Error');
+//   }
+// } )
+
+
+app.get('/childprofile/:id/:schoolId', async (req, res) => {
+  const { id, schoolId } = req.params;
+
+  try {
+      const childrenQuery = await client.query(
+          'SELECT name, date_of_birth, school, child_id, school_id FROM children WHERE child_id = $1 AND school_id = $2',
+          [id, schoolId]
+      );
+
+      const userData = {
+          children: childrenQuery.rows.map(child => {
+              const today = new Date();
+              const birthDate = new Date(child.date_of_birth);
+              let age = today.getFullYear() - birthDate.getFullYear();
+              const monthDiff = today.getMonth() - birthDate.getMonth();
+              if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                  age--;
+              }
+
+              return {
+                id: child.child_id,
+                  name: child.name,
+                  age: age,
+                  school: child.school,
+                  schoolId: child.school_id
+              };
+          })
+      };
+
+      res.status(200).json(userData);
+  } catch (error) {
+      console.error('Error fetching child profile:', error);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
+
+
+app.get('/contacts/:type/:childId/:schoolId', async (req, res) => {
+  const { type, childId, schoolId } = req.params;
+
+  try {
+      let query;
+      switch (type) {
+          case 'teacher':
+          case 'management':
+          case 'health':
+          case 'parent':
+              query = 'SELECT * FROM contacts WHERE type = $1 AND child_id = $2 AND school_id = $3';
+              break;
+          default:
+              return res.status(400).json({ message: 'Invalid contact type' });
+      }
+
+      const result = await client.query(query, [type, childId, schoolId]);
+      res.json(result.rows);
+  } catch (error) {
+      console.error('Error fetching contacts:', error);
+      res.sendStatus(500);
+  }
+});
 
 
 // funkar ovan
