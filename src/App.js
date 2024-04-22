@@ -16,7 +16,7 @@ function App() {
                         <Route path="/" element={<HomePage />} />
                         <Route path="/profile/:id" element={<Profile />} />
                         <Route path="/childprofile/:id/:schoolId" element={<ChildProfilePage />} />
-                        <Route path="/contact/:type/:childId/:schoolId" element={<ContactPage />} />
+                        <Route path="/contact/:type/:schoolId" element={<ContactPage />} />
                     </Routes>
                 </BrowserRouter>
                 <NavBar />

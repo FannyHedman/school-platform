@@ -63,18 +63,18 @@ const Sidebar = () => {
             <SidebarItem>
                 {lang.contact_school}
                 <DropdownMenu>
-                    <Link to={`/contact/teacher/${childId}/${schoolId}`}>
+                    <Link to={`/contact/teacher/${schoolId}`}>
                         <DropdownItem>{lang.contact_teacher}</DropdownItem>
                     </Link>
-                    <Link to={`/contact/management/${childId}/${schoolId}`}>
+                    <Link to={`/contact/management/${schoolId}`}>
                         <DropdownItem>
                             {lang.contact_management}
                         </DropdownItem>
                     </Link>
-                    <Link to={`/contact/health/${childId}/${schoolId}`}>
+                    <Link to={`/contact/health/${schoolId}`}>
                         <DropdownItem>{lang.contact_health}</DropdownItem>
                     </Link>
-                    <Link to={`/contact/parent/${childId}/${schoolId}`}>
+                    <Link to={`/contact/parent/${schoolId}`}>
                         <DropdownItem>{lang.contact_parents}</DropdownItem>
                     </Link>
                 </DropdownMenu>

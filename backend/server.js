@@ -197,29 +197,19 @@ app.get('/childprofile/:id/:schoolId', async (req, res) => {
 
 
 
-app.get('/contacts/:type/:childId/:schoolId', async (req, res) => {
-  const { type, childId, schoolId } = req.params;
+app.get('/contacts/:type/:schoolId', async (req, res) => {
+  const { type, schoolId } = req.params;
 
   try {
-      let query;
-      switch (type) {
-          case 'teacher':
-          case 'management':
-          case 'health':
-          case 'parent':
-              query = 'SELECT * FROM contacts WHERE type = $1 AND child_id = $2 AND school_id = $3';
-              break;
-          default:
-              return res.status(400).json({ message: 'Invalid contact type' });
-      }
-
-      const result = await client.query(query, [type, childId, schoolId]);
-      res.json(result.rows);
+    const query = 'SELECT * FROM contacts WHERE type = $1 AND school_id = $2';
+    const result = await client.query(query, [type, schoolId]);
+    res.json(result.rows);
   } catch (error) {
-      console.error('Error fetching contacts:', error);
-      res.sendStatus(500);
+    console.error('Error fetching contacts:', error);
+    res.sendStatus(500);
   }
 });
+
 
 
 // funkar ovan
