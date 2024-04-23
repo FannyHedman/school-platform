@@ -33,7 +33,7 @@ const Sidebar = () => {
             <SidebarItem>
                 {lang.schedule}
                 <DropdownMenu>
-                    <Link to="/view_absence">
+                    <Link to={`/schedule/${childId}`}>
                         <DropdownItem>{lang.view_schedule}</DropdownItem>
                     </Link>
                     <Link to="/report_absence">

@@ -211,6 +211,33 @@ app.get('/contacts/:type/:schoolId', async (req, res) => {
 });
 
 
+app.get('/schedule/:childId', async (req, res) => {
+  const { childId } = req.params; // Fetch childId from URL parameters
+
+  try {
+    // Your SQL query to fetch schedules for child with the specified ID
+    const query = `
+      SELECT cs.child_id, cs.day_id, cs.time_slot_id, d.day_name, ts.start_time, ts.end_time
+      FROM ChildSchedule cs
+      JOIN Day d ON cs.day_id = d.day_id
+      JOIN TimeSlot ts ON cs.time_slot_id = ts.time_slot_id
+      WHERE cs.child_id = $1
+      AND cs.day_id BETWEEN 1 AND 5; -- Monday to Friday
+    `;
+
+    const { rows } = await client.query(query, [childId]);
+    res.json(rows);
+  } catch (error) {
+    console.error('Error fetching child schedule:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
+
+
+
+
+
+
 
 // funkar ovan
 
