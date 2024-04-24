@@ -210,17 +210,15 @@ app.get('/contacts/:type/:schoolId', async (req, res) => {
   }
 });
 
-
 app.get('/schedule/:childId', async (req, res) => {
-  const { childId } = req.params; // Fetch childId from URL parameters
+  const { childId } = req.params;
 
   try {
-    // Your SQL query to fetch schedules for child with the specified ID
+
     const query = `
-      SELECT cs.child_id, cs.day_id, cs.time_slot_id, d.day_name, ts.start_time, ts.end_time
+      SELECT cs.child_id, cs.day_id, cs.start_time, cs.end_time, d.day_name
       FROM ChildSchedule cs
       JOIN Day d ON cs.day_id = d.day_id
-      JOIN TimeSlot ts ON cs.time_slot_id = ts.time_slot_id
       WHERE cs.child_id = $1
       AND cs.day_id BETWEEN 1 AND 5; -- Monday to Friday
     `;
@@ -233,79 +231,39 @@ app.get('/schedule/:childId', async (req, res) => {
   }
 });
 
+app.put('/schedule/:childId', async (req, res) => {
+  const { childId } = req.params;
+  const { dayId, startTime, endTime } = req.body;
 
+  console.log('Received startTime:', startTime);
+console.log('Received endTime:', endTime);
+console.log('Received request body:', req.body);
+
+
+  try {
+    await client.query('BEGIN');
+
+    const updateQuery = `
+      UPDATE ChildSchedule
+      SET start_time = $1, end_time = $2
+      WHERE child_id = $3 AND day_id = $4;
+    `;
+    await client.query(updateQuery, [startTime, endTime, childId, dayId]);
+
+    await client.query('COMMIT');
+    res.status(200).send('Schedule updated successfully');
+  } catch (error) {
+    await client.query('ROLLBACK');
+    console.error('Error updating schedule:', error);
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 
 
 
 
 // funkar ovan
-
-
-
-
-
-
-// app.get('/accounts/:id', async (req, res) => {
-//   const { id } = req.params;
-
-//   try {
-//       // Fetch parent data
-//       const parentQuery = await client.query(
-//           'SELECT username, parent_name FROM accounts WHERE id = $1',
-//           [id]
-//       );
-
-//       // Fetch children data including name, date of birth, and school
-//       const childrenQuery = await client.query(
-//           'SELECT id, name, date_of_birth, school FROM children WHERE parent_id = $1',
-//           [id]
-//       );
-
-//       if (parentQuery.rows.length === 0) {
-//           res.status(404).send('User not found');
-//           return;
-//       }
-
-//       // Fetch schedules for each child
-//       const childrenWithSchedules = await Promise.all(childrenQuery.rows.map(async (child) => {
-//           const scheduleQuery = await client.query(
-//               'SELECT day_of_week, start_time, end_time FROM child_schedules WHERE child_id = $1',
-//               [child.id]
-//           );
-//           return {
-//               ...child,
-//               schedule: scheduleQuery.rows
-//           };
-//       }));
-
-//       const userData = {
-//           parent_name: parentQuery.rows[0].parent_name,
-//           children: childrenWithSchedules.map(child => {
-//               // Calculate age based on date of birth
-//               const today = new Date();
-//               const birthDate = new Date(child.date_of_birth);
-//               let age = today.getFullYear() - birthDate.getFullYear();
-//               const monthDiff = today.getMonth() - birthDate.getMonth();
-//               if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
-//                   age--;
-//               }
-
-//               return {
-//                   name: child.name,
-//                   age: age,
-//                   school: child.school,
-//                   schedule: child.schedule
-//               };
-//           })
-//       };
-
-//       res.status(200).json(userData);
-//   } catch (error) {
-//       console.error('Error fetching user profile:', error);
-//       res.status(500).send('Internal Server Error');
-//   }
-// });
 
 
 app.listen(8800, () => {
