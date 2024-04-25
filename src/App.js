@@ -18,7 +18,7 @@ function App() {
                         <Route path="/profile/:id" element={<Profile />} />
                         <Route path="/childprofile/:id/:schoolId" element={<ChildProfilePage />} />
                         <Route path="/contact/:type/:schoolId" element={<ContactPage />} />
-                        <Route path="/schedule/:childId" element={<SchedulePage />} />
+                        <Route path="/schedule/:childId/*" element={<SchedulePage />} />
                     </Routes>
                 </BrowserRouter>
                 <NavBar />

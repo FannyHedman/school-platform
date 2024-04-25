@@ -7,8 +7,7 @@ import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 
 const Sidebar = () => {
-
-  const { id: childId, schoolId } = useParams();
+    const { id: childId, schoolId } = useParams()
 
     const { language } = useLanguage()
     const lang = language === 'se' ? se : en
@@ -33,13 +32,13 @@ const Sidebar = () => {
             <SidebarItem>
                 {lang.schedule}
                 <DropdownMenu>
-                    <Link to={`/schedule/${childId}`}>
+                    <Link to={`/schedule/${childId}/show`}>
                         <DropdownItem>{lang.view_schedule}</DropdownItem>
                     </Link>
-                    <Link to="/report_absence">
+                    <Link to={`/schedule/${childId}/change`}>
                         <DropdownItem>{lang.change_schedule}</DropdownItem>
                     </Link>
-                    <Link to="/report_absence">
+                    <Link to={`/schedule/${childId}/requested`}>
                         <DropdownItem>{lang.req_schedule}</DropdownItem>
                     </Link>
                 </DropdownMenu>
@@ -51,9 +50,7 @@ const Sidebar = () => {
                         <DropdownItem>{lang.weekly_letter}</DropdownItem>
                     </Link>
                     <Link to="/report_absence">
-                        <DropdownItem>
-                            {lang.important_dates}
-                        </DropdownItem>
+                        <DropdownItem>{lang.important_dates}</DropdownItem>
                     </Link>
                     <Link to="/schedule_absence">
                         <DropdownItem>{lang.lunch_menu}</DropdownItem>
@@ -67,9 +64,7 @@ const Sidebar = () => {
                         <DropdownItem>{lang.contact_teacher}</DropdownItem>
                     </Link>
                     <Link to={`/contact/management/${schoolId}`}>
-                        <DropdownItem>
-                            {lang.contact_management}
-                        </DropdownItem>
+                        <DropdownItem>{lang.contact_management}</DropdownItem>
                     </Link>
                     <Link to={`/contact/health/${schoolId}`}>
                         <DropdownItem>{lang.contact_health}</DropdownItem>
@@ -83,12 +78,12 @@ const Sidebar = () => {
                 {lang.my_page}
                 <DropdownMenu>
                     <Link to="/view_absence">
-                        <DropdownItem>{lang.parent_contact_details}</DropdownItem>
+                        <DropdownItem>
+                            {lang.parent_contact_details}
+                        </DropdownItem>
                     </Link>
                     <Link to="/report_absence">
-                        <DropdownItem>
-                            {lang.parent_children}
-                        </DropdownItem>
+                        <DropdownItem>{lang.parent_children}</DropdownItem>
                     </Link>
                     <Link to="/schedule_absence">
                         <DropdownItem>{lang.parent_income}</DropdownItem>

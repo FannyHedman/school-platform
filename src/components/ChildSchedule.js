@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 
-const ChildSchedule = () => {
-  const { childId } = useParams();
+const ChildSchedule = ({childId}) => {
+  // const { childId } = useParams();
   const [schedule, setSchedule] = useState([]);
   const [updatedTimes, setUpdatedTimes] = useState({});
 

@@ -260,6 +260,59 @@ console.log('Received request body:', req.body);
 });
 
 
+// Requested schedules
+
+app.get('/weeks', async (req, res) => {
+  try {
+    const query = `
+      SELECT w.*, ARRAY_AGG(d.day_name) AS day, ARRAY_AGG(wda.attending) AS attending
+      FROM weeks w
+      JOIN week_day_association wda ON w.week_id = wda.week_id
+      JOIN day d ON wda.day_id = d.day_id
+      GROUP BY w.week_id
+    `;
+    const { rows } = await client.query(query);
+    res.json(rows);
+  } catch (error) {
+    console.error('Error fetching weeks:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+app.get('/week_day_association', async (req, res) => {
+  try {
+
+    const query = `
+      SELECT *
+      FROM week_day_association
+    `;
+
+    const { rows } = await client.query(query);
+
+    res.json(rows);
+  } catch (error) {
+    console.error('Error fetching week_day_association:', error);
+    res.status(500).json({ error: error.message });
+  }
+});
+
+
+
+app.put('/week_day_association', async (req, res) => {
+  const { weekId, dayId, attending } = req.body;
+  console.log('Received request body:', req.body)
+
+  try {
+    console.log('Updating attendance with parameters:', attending, weekId, dayId);
+
+    await client.query('UPDATE week_day_association SET attending = $1 WHERE week_id = $2 AND day_id = $3', [attending, weekId, dayId]);
+    res.status(200).send('Attendance updated successfully');
+  } catch (error) {
+    console.error('Error updating attendance:', error.message); 
+
+    res.status(500).send('Internal Server Error');
+  }
+});
 
 
 
