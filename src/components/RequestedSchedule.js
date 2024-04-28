@@ -1,23 +1,78 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
 const RequestedSchedule = () => {
   const [weeks, setWeeks] = useState([]);
   const [selectedDays, setSelectedDays] = useState({});
+  const { childId } = useParams();
 
-  useEffect(() => {
-    const fetchWeeks = async () => {
-      try {
-        const response = await axios.get('http://localhost:8800/weeks');
-        const sortedWeeks = response.data.sort((a, b) => a.week_number - b.week_number);
-        setWeeks(sortedWeeks);
-      } catch (error) {
-        console.error('Error fetching weeks:', error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchWeeks = async () => {
+  //     try {
+  //       const response = await axios.get('http://localhost:8800/weeks');
+  //       const sortedWeeks = response.data.sort((a, b) => a.week_number - b.week_number);
+  //       setWeeks(sortedWeeks);
+  //     } catch (error) {
+  //       console.error('Error fetching weeks:', error);
+  //     }
+  //   };
 
-    fetchWeeks();
-  }, []);
+  //   fetchWeeks();
+  // }, []);
+
+//   useEffect(() => {
+//     const fetchWeeks = async () => {
+//         try {
+//             const response = await axios.get(`http://localhost:8800/weeks/${childId}`);
+//             const sortedWeeks = response.data.sort((a, b) => a.week_number - b.week_number);
+//             setWeeks(sortedWeeks);
+//         } catch (error) {
+//             console.error('Error fetching weeks:', error);
+//         }
+//     };
+
+//     fetchWeeks();
+// }, [childId]);
+
+useEffect(() => {
+  const fetchWeeks = async () => {
+    try {
+      const response = await axios.get(`http://localhost:8800/weeks/${childId}`);
+      const sortedWeeks = response.data.map((week) => ({
+        ...week,
+        day: week.day.sort((a, b) => {
+          const dayOrder = {
+            'Monday': 1,
+            'Tuesday': 2,
+            'Wednesday': 3,
+            'Thursday': 4,
+            'Friday': 5
+          };
+          return dayOrder[a] - dayOrder[b];
+        })
+      })).sort((a, b) => a.week_number - b.week_number);
+
+      setWeeks(sortedWeeks);
+    } catch (error) {
+      console.error('Error fetching weeks:', error);
+    }
+  };
+
+  fetchWeeks();
+}, [childId]);
+
+
+  // const handleWeekToggle = (weekId) => {
+  //   setSelectedDays((prev) => {
+  //     const allSelected = !prev[weekId]?.all;
+  //     const updatedDays = { ...prev[weekId] };
+  //     for (const day of weeks.find((week) => week.week_id === weekId)?.day) {
+  //       updatedDays[day] = allSelected;
+  //     }
+  //     return { ...prev, [weekId]: { all: allSelected, ...updatedDays } };
+  //   });
+  // };
 
   const handleWeekToggle = (weekId) => {
     setSelectedDays((prev) => {
@@ -29,6 +84,7 @@ const RequestedSchedule = () => {
       return { ...prev, [weekId]: { all: allSelected, ...updatedDays } };
     });
   };
+
 
   const handleDayToggle = (weekId, day) => {
     setSelectedDays((prev) => ({
@@ -63,8 +119,8 @@ const getDayIdFromName = (dayName) => {
             attending
           };
 
-          const response = await axios.put('http://localhost:8800/week_day_association', data);
-          console.log(`Attendance for Week ${weekId}, Day ${dayId} submitted successfully:`, response.data);
+          const response = await axios.put(`http://localhost:8800/week_day_association/${childId}`, data);
+          console.log(`Attendance for Child ${childId} Week ${weekId}, Day ${dayId} submitted successfully:`, response.data);
         }
       }
     } catch (error) {
