@@ -1,39 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import ConfirmationModalReq from './ConfirmationModalReq';
 
 const RequestedSchedule = () => {
   const [weeks, setWeeks] = useState([]);
   const [selectedDays, setSelectedDays] = useState({});
+  const [showModal, setShowModal] = useState(false);
   const { childId } = useParams();
-
-  // useEffect(() => {
-  //   const fetchWeeks = async () => {
-  //     try {
-  //       const response = await axios.get('http://localhost:8800/weeks');
-  //       const sortedWeeks = response.data.sort((a, b) => a.week_number - b.week_number);
-  //       setWeeks(sortedWeeks);
-  //     } catch (error) {
-  //       console.error('Error fetching weeks:', error);
-  //     }
-  //   };
-
-  //   fetchWeeks();
-  // }, []);
-
-//   useEffect(() => {
-//     const fetchWeeks = async () => {
-//         try {
-//             const response = await axios.get(`http://localhost:8800/weeks/${childId}`);
-//             const sortedWeeks = response.data.sort((a, b) => a.week_number - b.week_number);
-//             setWeeks(sortedWeeks);
-//         } catch (error) {
-//             console.error('Error fetching weeks:', error);
-//         }
-//     };
-
-//     fetchWeeks();
-// }, [childId]);
 
 useEffect(() => {
   const fetchWeeks = async () => {
@@ -63,27 +37,19 @@ useEffect(() => {
 }, [childId]);
 
 
-  // const handleWeekToggle = (weekId) => {
-  //   setSelectedDays((prev) => {
-  //     const allSelected = !prev[weekId]?.all;
-  //     const updatedDays = { ...prev[weekId] };
-  //     for (const day of weeks.find((week) => week.week_id === weekId)?.day) {
-  //       updatedDays[day] = allSelected;
-  //     }
-  //     return { ...prev, [weekId]: { all: allSelected, ...updatedDays } };
-  //   });
-  // };
-
   const handleWeekToggle = (weekId) => {
     setSelectedDays((prev) => {
       const allSelected = !prev[weekId]?.all;
-      const updatedDays = { ...prev[weekId] };
+      const updatedWeek = { all: allSelected };
+
       for (const day of weeks.find((week) => week.week_id === weekId)?.day) {
-        updatedDays[day] = allSelected;
+        updatedWeek[day] = allSelected;
       }
-      return { ...prev, [weekId]: { all: allSelected, ...updatedDays } };
+
+      return { ...prev, [weekId]: updatedWeek };
     });
   };
+
 
 
   const handleDayToggle = (weekId, day) => {
@@ -123,6 +89,7 @@ const getDayIdFromName = (dayName) => {
           console.log(`Attendance for Child ${childId} Week ${weekId}, Day ${dayId} submitted successfully:`, response.data);
         }
       }
+      setShowModal(true);
     } catch (error) {
       console.error('Error submitting selected days:', error);
     }
@@ -140,6 +107,7 @@ const getDayIdFromName = (dayName) => {
               type="checkbox"
               checked={selectedDays[week.week_id]?.all}
               onChange={() => handleWeekToggle(week.week_id)}
+              disabled={showModal}
             />
             Week {week.week_number}: {week.start_date} to {week.end_date}
             <ul>
@@ -150,6 +118,7 @@ const getDayIdFromName = (dayName) => {
                       type="checkbox"
                       checked={selectedDays[week.week_id]?.[day]}
                       onChange={() => handleDayToggle(week.week_id, day)}
+                      disabled={showModal}
                     />
                     {day}
                   </li>
@@ -159,6 +128,7 @@ const getDayIdFromName = (dayName) => {
         ))}
       </ul>
       <button onClick={handleSubmit}>Submit</button>
+      {showModal && <ConfirmationModalReq handleClose={() => setShowModal(false)} />}
     </div>
   );
 };
