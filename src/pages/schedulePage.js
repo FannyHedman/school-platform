@@ -41,7 +41,7 @@ const SchedulePage = () => {
       <Routes>
         <Route path="/change" element={<ChangeChildScheduleWrapper />} />
         <Route path="/show" element={<ShowScheduleWrapper />} />
-        <Route path="/requested" element={<RequestedScheduleWrapper />} />
+        <Route path="/requested/:childId" element={<RequestedScheduleWrapper />} />
       </Routes>
     </div>
   );
