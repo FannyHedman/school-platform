@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
 import ConfirmationModalReq from './ConfirmationModalReq';
+import { fetchWeeks } from '../apiService';
 
 const RequestedSchedule = () => {
   const [weeks, setWeeks] = useState([]);
@@ -9,33 +10,46 @@ const RequestedSchedule = () => {
   const [showModal, setShowModal] = useState(false);
   const { childId } = useParams();
 
-useEffect(() => {
-  const fetchWeeks = async () => {
-    try {
-      const response = await axios.get(`http://localhost:8800/weeks/${childId}`);
-      const sortedWeeks = response.data.map((week) => ({
-        ...week,
-        day: week.day.sort((a, b) => {
-          const dayOrder = {
-            'Monday': 1,
-            'Tuesday': 2,
-            'Wednesday': 3,
-            'Thursday': 4,
-            'Friday': 5
-          };
-          return dayOrder[a] - dayOrder[b];
-        })
-      })).sort((a, b) => a.week_number - b.week_number);
+// useEffect(() => {
+//   const fetchWeeks = async () => {
+//     try {
+//       const response = await axios.get(`http://localhost:8800/weeks/${childId}`);
+//       const sortedWeeks = response.data.map((week) => ({
+//         ...week,
+//         day: week.day.sort((a, b) => {
+//           const dayOrder = {
+//             'Monday': 1,
+//             'Tuesday': 2,
+//             'Wednesday': 3,
+//             'Thursday': 4,
+//             'Friday': 5
+//           };
+//           return dayOrder[a] - dayOrder[b];
+//         })
+//       })).sort((a, b) => a.week_number - b.week_number);
 
+//       setWeeks(sortedWeeks);
+//     } catch (error) {
+//       console.error('Error fetching weeks:', error);
+//     }
+//   };
+
+//   fetchWeeks();
+// }, [childId]);
+
+
+useEffect(() => {
+  const fetchData = async () => {
+    try {
+      const sortedWeeks = await fetchWeeks(childId);
       setWeeks(sortedWeeks);
     } catch (error) {
       console.error('Error fetching weeks:', error);
     }
   };
 
-  fetchWeeks();
+  fetchData();
 }, [childId]);
-
 
   const handleWeekToggle = (weekId) => {
     setSelectedDays((prev) => {
