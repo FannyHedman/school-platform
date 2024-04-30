@@ -148,22 +148,36 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, Link } from 'react-router-dom';
+import { fetchUserData } from '../apiService';
 
 const UserProfile = () => {
     const { id } = useParams();
     const [userData, setUserData] = useState({});
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await axios.get(`http://localhost:8800/accounts/${id}`);
-                setUserData(response.data);
-            } catch (error) {
-                console.error('Error fetching user profile:', error);
-            }
-        };
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         try {
+    //             const response = await axios.get(`http://localhost:8800/accounts/${id}`);
+    //             setUserData(response.data);
+    //         } catch (error) {
+    //             console.error('Error fetching user profile:', error);
+    //         }
+    //     };
 
-        fetchData();
+    //     fetchData();
+    // }, [id]);
+
+    useEffect(() => {
+      const fetchData = async () => {
+        try {
+          const data = await fetchUserData(id);
+          setUserData(data);
+        } catch (error) {
+          console.error('Error fetching user profile:', error);
+        }
+      };
+
+      fetchData();
     }, [id]);
 
     return (

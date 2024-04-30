@@ -1,23 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams } from 'react-router-dom';
+import { fetchSchedule } from '../apiService';
+import { updateSchedule } from '../apiService';
 
-const ChildSchedule = ({childId}) => {
-  // const { childId } = useParams();
+const ChildSchedule = () => {
+  const { childId } = useParams();
   const [schedule, setSchedule] = useState([]);
   const [updatedTimes, setUpdatedTimes] = useState({});
 
-  const fetchSchedule = async () => {
+  // const fetchSchedule = async () => {
+  //   try {
+  //     const response = await axios.get(`http://localhost:8800/schedule/${childId}`);
+  //     setSchedule(response.data);
+  //   } catch (error) {
+  //     console.error('Error fetching child schedule:', error);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchSchedule();
+  // }, [childId]);
+
+  const fetchChildSchedule = async () => {
     try {
-      const response = await axios.get(`http://localhost:8800/schedule/${childId}`);
-      setSchedule(response.data);
+      const childSchedule = await fetchSchedule(childId);
+      setSchedule(childSchedule);
     } catch (error) {
       console.error('Error fetching child schedule:', error);
     }
   };
 
   useEffect(() => {
-    fetchSchedule();
+    fetchChildSchedule();
   }, [childId]);
 
   const handleTimeChange = (dayId, field, value) => {
@@ -26,6 +41,27 @@ const ChildSchedule = ({childId}) => {
       [dayId]: { ...prev[dayId], [field]: value },
     }));
   };
+
+  // const handleScheduleUpdate = async (dayId) => {
+  //   try {
+  //     const startTime = updatedTimes[dayId]?.start_time;
+  //     const endTime = updatedTimes[dayId]?.end_time;
+
+  //     console.log('dayId:', dayId);
+  //     console.log('startTime:', startTime);
+  //     console.log('endTime:', endTime);
+  //     console.log('Updated times:', updatedTimes); // Add this line for debugging
+
+  //     await axios.put(`http://localhost:8800/schedule/${childId}`, { dayId, endTime, startTime });
+
+  //     console.log('Schedule updated successfully');
+  //     // Refresh schedule after update
+  //     setUpdatedTimes({});
+  //     fetchSchedule();
+  //   } catch (error) {
+  //     console.error('Error updating child schedule:', error);
+  //   }
+  // };
 
   const handleScheduleUpdate = async (dayId) => {
     try {
@@ -37,12 +73,12 @@ const ChildSchedule = ({childId}) => {
       console.log('endTime:', endTime);
       console.log('Updated times:', updatedTimes); // Add this line for debugging
 
-      await axios.put(`http://localhost:8800/schedule/${childId}`, { dayId, endTime, startTime });
+      await updateSchedule(childId, dayId, startTime, endTime);
 
       console.log('Schedule updated successfully');
       // Refresh schedule after update
       setUpdatedTimes({});
-      fetchSchedule();
+      fetchChildSchedule();
     } catch (error) {
       console.error('Error updating child schedule:', error);
     }
