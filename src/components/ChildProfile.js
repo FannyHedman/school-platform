@@ -43,13 +43,15 @@
 
 
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { fetchChildProfile } from '../apiService';
 import SideBar from './SideBar';
 
 const ChildProfile = () => {
   const { id, schoolId } = useParams();
   const [userData, setUserData] = useState({});
+  const navigate = useNavigate(); 
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -64,8 +66,14 @@ const ChildProfile = () => {
     fetchData();
   }, [id, schoolId]);
 
+
+    const handleBack = () => {
+      navigate(-1);
+    };
   return (
     <div>
+            <button style={{marginTop: '200px'}} onClick={handleBack}>Back</button>
+
       <ul style={{ marginTop: '150px' }}>
         {userData.children &&
           userData.children.map((child, index) => (
