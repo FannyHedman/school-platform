@@ -32,13 +32,13 @@ const Sidebar = () => {
             <SidebarItem>
                 {lang.schedule}
                 <DropdownMenu>
-                    <Link to={`/schedule/${childId}/show`}>
+                <Link to={`/show/${childId}/${schoolId}`}>
                         <DropdownItem>{lang.view_schedule}</DropdownItem>
                     </Link>
-                    <Link to={`/schedule/${childId}/change`}>
+                    <Link to={`/change/${childId}/${schoolId}`}>
                         <DropdownItem>{lang.change_schedule}</DropdownItem>
                     </Link>
-                    <Link to={`/schedule/${childId}/requested/${childId}`}>
+                    <Link to={`/requested/${childId}/${schoolId}`}>
                         <DropdownItem>{lang.req_schedule}</DropdownItem>
                     </Link>
                 </DropdownMenu>
@@ -60,16 +60,16 @@ const Sidebar = () => {
             <SidebarItem>
                 {lang.contact_school}
                 <DropdownMenu>
-                    <Link to={`/contact/teacher/${schoolId}`}>
+                    <Link to={`/contact/teacher/${schoolId}/${childId}`}>
                         <DropdownItem>{lang.contact_teacher}</DropdownItem>
                     </Link>
-                    <Link to={`/contact/management/${schoolId}`}>
+                    <Link to={`/contact/management/${schoolId}/${childId}`}>
                         <DropdownItem>{lang.contact_management}</DropdownItem>
                     </Link>
-                    <Link to={`/contact/health/${schoolId}`}>
+                    <Link to={`/contact/health/${schoolId}/${childId}`}>
                         <DropdownItem>{lang.contact_health}</DropdownItem>
                     </Link>
-                    <Link to={`/contact/parent/${schoolId}`}>
+                    <Link to={`/contact/parent/${schoolId}/${childId}`}>
                         <DropdownItem>{lang.contact_parents}</DropdownItem>
                     </Link>
                 </DropdownMenu>

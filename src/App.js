@@ -7,6 +7,10 @@ import Profile from './pages/profilePage'
 import ChildProfilePage from './pages/childProfilePage'
 import ContactPage from './pages/contactPage'
 import SchedulePage from './pages/schedulePage'
+import ShowSchedule from './components/ShowSchedule'
+import ChildSchedule from './components/ChildSchedule'
+import RequestedSchedule from './components/RequestedSchedule'
+import ContactComponent from './components/ContactComponent'
 
 function App() {
     return (
@@ -17,8 +21,12 @@ function App() {
                         <Route path="/" element={<HomePage />} />
                         <Route path="/profile/:id" element={<Profile />} />
                         <Route path="/childprofile/:id/:schoolId" element={<ChildProfilePage />} />
-                        <Route path="/contact/:type/:schoolId" element={<ContactPage />} />
-                        <Route path="/schedule/:childId/*" element={<SchedulePage />} />
+                        <Route path="/contact/:type/:schoolId/:childId" element={<ContactComponent />} />
+                        {/* <Route path="/schedule/:childId/*" element={<SchedulePage />} /> */}
+                        <Route path="/show/:childId/:schoolId" element={<ShowSchedule />} />
+                        <Route path="/change/:childId/:schoolId" element={<ChildSchedule />} />
+                        <Route path="/requested/:childId/:schoolId" element={<RequestedSchedule />} />
+
                     </Routes>
                 </BrowserRouter>
                 <NavBar />

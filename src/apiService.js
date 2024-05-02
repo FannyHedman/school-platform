@@ -22,6 +22,7 @@ export const fetchChildProfile = async (childId, schoolId) => {
             `/childprofile/${childId}/${schoolId}`
         )
         return response.data
+
     } catch (error) {
         console.error('Error fetching child profile:', error)
         throw error // Propagate the error to the caller
