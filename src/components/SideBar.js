@@ -6,7 +6,7 @@ import { useLanguage } from '../components/language/LanguageContext'
 import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 
-const Sidebar = () => {
+const Sidebar = ({userId}) => {
     const { id: childId, schoolId } = useParams()
 
     const { language } = useLanguage()
@@ -77,7 +77,7 @@ const Sidebar = () => {
             <SidebarItem>
                 {lang.my_page}
                 <DropdownMenu>
-                    <StyledLink to="/view_absence">
+                    <StyledLink to={`/usercontact/${userId}`}>
                         <DropdownItem>
                             {lang.parent_contact_details}
                         </DropdownItem>
