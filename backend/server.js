@@ -48,6 +48,17 @@ app.get('/accounts', async (req, res) => {
     }
 })
 
+app.get('/accounts/:userId', async (req, res) => {
+  const { userId } = req.params;
+  try {
+      const result = await client.query('SELECT * FROM accounts WHERE id = $1', [userId]);
+      res.json(result.rows);
+  } catch (err) {
+      console.error(err);
+      res.sendStatus(500);
+  }
+});
+
 app.post('/accounts', async (req, res) => {
     const { username, password } = req.body
     const values = [username, password]

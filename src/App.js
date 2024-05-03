@@ -12,17 +12,29 @@ import ChildSchedule from './components/ChildSchedule'
 import RequestedSchedule from './components/RequestedSchedule'
 import ContactComponent from './components/ContactComponent'
 import CustomerServicePage from './pages/customerServicePage'
+import UserContactDetails from './components/myPage/UserContactDetails'
+import { useEffect, useState } from 'react'
+import Sidebar from './components/SideBar'
 
 function App() {
+
+  const [userId, setUserId] = useState('');
+
+  useEffect(() => {
+        const storedId = localStorage.getItem('userId');
+    setUserId(storedId);
+  }, []);
     return (
         <div className="App">
             <LanguageProvider>
                 <BrowserRouter>
-                <NavBar />
+                <NavBar userId={userId}/>
+                <Sidebar userId={userId}/>
                     <Routes>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/customer-service" element={<CustomerServicePage />} />
                         <Route path="/profile/:id" element={<Profile />} />
+                        <Route path="/usercontact/:userId" element={<UserContactDetails />} />
                         <Route path="/childprofile/:id/:schoolId" element={<ChildProfilePage />} />
                         <Route path="/contact/:type/:schoolId/:childId" element={<ContactComponent />} />
                         {/* <Route path="/schedule/:childId/*" element={<SchedulePage />} /> */}

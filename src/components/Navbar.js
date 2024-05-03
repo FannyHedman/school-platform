@@ -7,9 +7,11 @@ import { useLanguage } from '../components/language/LanguageContext'
 import en from '../components/language/languages/EN.json'
 import se from '../components/language/languages/SE.json'
 import { Link } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 
 
-const NavBar = () => {
+const NavBar = ({userId}) => {
+  const { id } = useParams()
     const { language } = useLanguage()
     const lang = language === 'se' ? se : en
     const location = useLocation(); // Get current location
@@ -32,6 +34,7 @@ const NavBar = () => {
                     <NavLink href="#skills">{lang.navbar_howto}</NavLink>
                 )}
                 <StyledLink to={`/customer-service/`}>{lang.navbar_contact}</StyledLink>
+                <StyledLink to={`/usercontact/${userId}`}>konto</StyledLink>
                 <LanguageSwitch />
             </NavLinks>
             <MobileMenuIcon

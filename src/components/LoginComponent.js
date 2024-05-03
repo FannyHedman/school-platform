@@ -32,9 +32,13 @@ const LoginComponent = () => {
                 account
             )
 
-            const id = response.data.id
-            navigate(`/profile/${id}`)
-            console.log('logged in successfully')
+            // const id = response.data.id
+            // navigate(`/profile/${id}`)
+            // console.log('logged in successfully')
+            const userId = response.data.id; // Retrieve user ID from response
+        localStorage.setItem('userId', userId); // Store user ID securely
+        navigate(`/profile/${userId}`);
+        console.log('logged in successfully');
         } catch (err) {
             console.log(err)
             setError(true)
