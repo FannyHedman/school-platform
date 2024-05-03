@@ -11,14 +11,17 @@ import ShowSchedule from './components/ShowSchedule'
 import ChildSchedule from './components/ChildSchedule'
 import RequestedSchedule from './components/RequestedSchedule'
 import ContactComponent from './components/ContactComponent'
+import CustomerServicePage from './pages/customerServicePage'
 
 function App() {
     return (
         <div className="App">
             <LanguageProvider>
                 <BrowserRouter>
+                <NavBar />
                     <Routes>
                         <Route path="/" element={<HomePage />} />
+                        <Route path="/customer-service" element={<CustomerServicePage />} />
                         <Route path="/profile/:id" element={<Profile />} />
                         <Route path="/childprofile/:id/:schoolId" element={<ChildProfilePage />} />
                         <Route path="/contact/:type/:schoolId/:childId" element={<ContactComponent />} />
@@ -29,7 +32,7 @@ function App() {
 
                     </Routes>
                 </BrowserRouter>
-                <NavBar />
+                {/* <NavBar /> */}
             </LanguageProvider>
         </div>
     )

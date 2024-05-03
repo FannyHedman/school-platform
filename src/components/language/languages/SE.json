@@ -8,6 +8,7 @@
   "login_password": "Lösenord",
   "login_login": "Logga in",
   "welcome_user": "Hej",
+  "user_message": "Välkommen till skolplattformen. Välj ett barn för att se information och göra ändringar.",
 
   "report_abscent": "Anmäl frånvaro",
   "report_todays_abscent": "Rapportera frånvaro för idag",

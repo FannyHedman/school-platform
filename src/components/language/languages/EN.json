@@ -8,6 +8,7 @@
   "login_password": "Password",
   "login_login": "Login",
   "welcome_user": "Hello",
+  "user_message": "Welcome to the school portal. Choose a child to see more information.",
 
   "absence": "Absence",
   "view_absence": "View absence",
