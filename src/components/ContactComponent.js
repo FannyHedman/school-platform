@@ -1,88 +1,64 @@
-// // import React, { useState, useEffect } from 'react';
-// // import axios from 'axios';
-// // import { useParams } from 'react-router-dom';
-// // import { fetchContacts } from '../apiService';
-
-// // const ContactComponent = () => {
-// //   const { type, schoolId } = useParams();
-
-// //   const [contactsData, setContactsData] = useState([]);
-
-
-// //   useEffect(() => {
-// //     const fetchData = async () => {
-// //       try {
-// //         const data = await fetchContacts(type, schoolId);
-// //         setContactsData(data);
-// //       } catch (error) {
-// //         console.error('Error fetching user profile:', error);
-// //       }
-// //     };
-
-// //     fetchData();
-// //   }, [type, schoolId]);
-
-// //   return (
-// //     <div style={{marginTop: '200px'}}>
-// //       <h1>{type}</h1>
-// //       <ul>
-// //         {contactsData.map((contact, index) => (
-// //           <li key={index}>
-// //             <p>Name: {contact.name}</p>
-// //             <p>Email: {contact.email}</p>
-// //             <p>Phone: {contact.phone}</p>
-// //           </li>
-// //         ))}
-// //       </ul>
-// //     </div>
-// //   );
-// // }
-
-// // export default ContactComponent;
-
-// import React, { useState, useEffect } from 'react';
+// import React, { useEffect, useState } from 'react';
 // import { useParams, useNavigate } from 'react-router-dom';
-// import { fetchContacts } from '../apiService';
+// import { fetchChildProfile, fetchContacts } from '../apiService';
 
 // const ContactComponent = () => {
-//   const { type, schoolId } = useParams();
-//   const [contactsData, setContactsData] = useState([]);
-//   const navigate = useNavigate(); // Import useNavigate from react-router-dom
+//     const { type, schoolId, childId } = useParams();
+//     const [contacts, setContacts] = useState([]);
+//     const [userData, setUserData] = useState({});
+//     const navigate = useNavigate();
 
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const data = await fetchContacts(type, schoolId);
-//         setContactsData(data);
-//       } catch (error) {
-//         console.error('Error fetching user profile:', error);
-//       }
+//     useEffect(() => {
+//         const fetchData = async () => {
+//             try {
+
+//                 const [profileData, contactsData] = await Promise.all([
+//                     fetchChildProfile(childId, schoolId),
+//                     fetchContacts(type, schoolId)
+//                 ]);
+
+//                 setUserData(profileData);
+//                 setContacts(contactsData);
+//             } catch (error) {
+//                 console.error('Error fetching data:', error);
+//             }
+//         };
+
+//         fetchData();
+//     }, [type, schoolId, childId]);
+
+
+//     const handleBack = () => {
+//         navigate(-1);
 //     };
 
-//     fetchData();
-//   }, [type, schoolId]);
+//     return (
+//         <div>
+//             <button onClick={handleBack} style={{marginTop: '200px'}}>Back</button>
 
-//   // Function to handle the back button click
-//   const handleBack = () => {
-//     navigate(-1); // Go back to the previous page
-//   };
 
-//   return (
-//     <div style={{marginTop: '200px'}}>
-//       <h1>{type}</h1>
-//       <button onClick={handleBack}>Back</button> {/* Back button */}
-//       <ul>
-//         {contactsData.map((contact, index) => (
-//           <li key={index}>
-//             <p>Name: {contact.name}</p>
-//             <p>Email: {contact.email}</p>
-//             <p>Phone: {contact.phone}</p>
-//           </li>
-//         ))}
+//             <ul style={{ marginTop: '150px' }}>
+//         {userData.children &&
+//           userData.children.map((child, index) => (
+//             <li key={index}>
+//               <p>{child.name}</p>
+//               <p>{child.school}</p>
+//             </li>
+//           ))}
 //       </ul>
-//     </div>
-//   );
-// }
+//             <h2>Contacts</h2>
+//             <ul>
+//                 {contacts.map((contact, index) => (
+//                     <li key={index}>
+//                         <p>Name: {contact.name}</p>
+//                         <p>Email: {contact.email}</p>
+
+//                     </li>
+//                 ))}
+//             </ul>
+//         </div>
+//     );
+// };
 
 // export default ContactComponent;
 
@@ -90,63 +66,115 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { fetchChildProfile, fetchContacts } from '../apiService';
+import styled from 'styled-components';
+import { useLanguage } from '../components/language/LanguageContext'
+import en from '../components/language/languages/EN.json'
+import se from '../components/language/languages/SE.json'
 
 const ContactComponent = () => {
-    const { type, schoolId, childId } = useParams();
-    const [contacts, setContacts] = useState([]);
-    const [userData, setUserData] = useState({});
-    const navigate = useNavigate();
+  const { type, schoolId, childId } = useParams();
+  const [contacts, setContacts] = useState([]);
+  const [userData, setUserData] = useState({});
+  const navigate = useNavigate();
+  const {language} = useLanguage();
+  const lang = language === 'se' ? se : en;
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const [profileData, contactsData] = await Promise.all([
+          fetchChildProfile(childId, schoolId),
+          fetchContacts(type, schoolId)
+        ]);
 
-                const [profileData, contactsData] = await Promise.all([
-                    fetchChildProfile(childId, schoolId),
-                    fetchContacts(type, schoolId)
-                ]);
-
-                setUserData(profileData);
-                setContacts(contactsData);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-
-        fetchData();
-    }, [type, schoolId, childId]);
-
-
-    const handleBack = () => {
-        navigate(-1);
+        setUserData(profileData);
+        setContacts(contactsData);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     };
 
-    return (
-        <div>
-            <button onClick={handleBack} style={{marginTop: '200px'}}>Back</button>
+    fetchData();
+  }, [type, schoolId, childId]);
 
+  const handleBack = () => {
+    navigate(-1);
+  };
 
-            <ul style={{ marginTop: '150px' }}>
+  return (
+    <Container className='container'>
+      <BackButton onClick={handleBack}>Back</BackButton>
+      {type === 'teacher' && <h2>{lang.contact_teacher}</h2>}
+      {type === 'management' && <h2>{lang.contact_management}</h2>}
+      {type === 'health' && <h2>{lang.contact_health}</h2>}
+      {type === 'parent' && <h2>{lang.contact_parents}</h2>}
+      <ChildInfoList>
         {userData.children &&
           userData.children.map((child, index) => (
-            <li key={index}>
-              <p>{child.name}</p>
+            <ChildInfoItem key={index}>
+              {/* <p>Name: {child.name}</p> */}
               <p>{child.school}</p>
-            </li>
+            </ChildInfoItem>
           ))}
-      </ul>
-            <h2>Contacts</h2>
-            <ul>
-                {contacts.map((contact, index) => (
-                    <li key={index}>
-                        <p>Name: {contact.name}</p>
-                        <p>Email: {contact.email}</p>
-                        
-                    </li>
-                ))}
-            </ul>
-        </div>
-    );
+      </ChildInfoList>
+      {/* <Heading>Contacts</Heading> */}
+      <ContactsList>
+        {contacts.map((contact, index) => (
+          <ContactItem key={index}>
+            <ContactName>Name: {contact.name}</ContactName>
+            <ContactEmail>Email: {contact.email}</ContactEmail>
+            <ContactEmail>Phone: {contact.phone_number}</ContactEmail>
+          </ContactItem>
+        ))}
+      </ContactsList>
+    </Container>
+  );
 };
 
 export default ContactComponent;
+
+const Container = styled.div`
+  /* margin-top: 50px; */
+  padding: 20px;
+`;
+
+const Heading = styled.h2`
+  margin-bottom: 20px;
+`;
+
+const BackButton = styled.button`
+  margin-top: 20px;
+  padding: 5px 10px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+`;
+
+const ChildInfoList = styled.ul`
+  margin-top: 20px;
+  list-style: none;
+  padding: 0;
+`;
+
+const ChildInfoItem = styled.li`
+  margin-bottom: 10px;
+`;
+
+const ContactsList = styled.ul`
+  margin-top: 20px;
+  list-style: none;
+  padding: 0;
+`;
+
+const ContactItem = styled.li`
+  margin-bottom: 20px;
+`;
+
+const ContactName = styled.p`
+  margin-bottom: 5px;
+`;
+
+const ContactEmail = styled.p`
+  margin-bottom: 10px;
+`;
