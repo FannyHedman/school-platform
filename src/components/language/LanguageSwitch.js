@@ -15,7 +15,8 @@ function LanguageSwitch() {
 export default LanguageSwitch
 
 const LanguageButton = styled.button`
-    background-color: rgba(103, 160, 69, 0.46);
+    background-color: black;
+    color: white;
     border-radius: 8px;
     border: none;
     padding: 5px;

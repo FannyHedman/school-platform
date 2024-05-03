@@ -1,5 +1,3 @@
-
-
 // import React, { useEffect, useState } from 'react';
 // import axios from 'axios';
 // import { useParams } from 'react-router-dom';
@@ -88,7 +86,6 @@
 
 // export default UserProfile;
 
-
 // import React, { useEffect, useState } from 'react';
 // import axios from 'axios';
 // import { useParams } from 'react-router-dom';
@@ -143,62 +140,138 @@
 
 // export default UserProfile;
 
+// import React, { useEffect, useState } from 'react';
+// import axios from 'axios';
+// import { useParams, Link } from 'react-router-dom';
+// import { fetchUserData } from '../apiService';
 
+// const UserProfile = () => {
+//     const { id } = useParams();
+//     const [userData, setUserData] = useState({});
 
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { useParams, Link } from 'react-router-dom';
-import { fetchUserData } from '../apiService';
+//     useEffect(() => {
+//       const fetchData = async () => {
+//         try {
+//           const data = await fetchUserData(id);
+//           setUserData(data);
+//         } catch (error) {
+//           console.error('Error fetching user profile:', error);
+//         }
+//       };
+
+//       fetchData();
+//     }, [id]);
+
+//     return (
+//         <div style={{ margin: '100px' }}>
+//             <p>User Profile</p>
+//             <p>
+//                 Welcome {userData.parent_name}!
+//             </p>
+//             <p>Children:</p>
+//             <ul>
+//                 {userData.children &&
+//                     userData.children.map((child, index) => (
+//                         <li key={index}>
+//                             <Link to={`/childprofile/${child.id}/${child.schoolId}`}>Name: {child.name}</Link>
+//                             <p>Age: {child.school_id}</p>
+//                             <p>School: {child.school}</p>
+//                         </li>
+//                     ))}
+//             </ul>
+//         </div>
+//     );
+// };
+
+// export default UserProfile;
+
+import React, { useEffect, useState } from 'react'
+import axios from 'axios'
+import { useParams, Link } from 'react-router-dom'
+import styled from 'styled-components'
+import { useLanguage } from '../components/language/LanguageContext'
+import en from '../components/language/languages/EN.json'
+import se from '../components/language/languages/SE.json'
 
 const UserProfile = () => {
-    const { id } = useParams();
-    const [userData, setUserData] = useState({});
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         try {
-    //             const response = await axios.get(`http://localhost:8800/accounts/${id}`);
-    //             setUserData(response.data);
-    //         } catch (error) {
-    //             console.error('Error fetching user profile:', error);
-    //         }
-    //     };
-
-    //     fetchData();
-    // }, [id]);
+    const { id } = useParams()
+    const [userData, setUserData] = useState({})
+    const {language} = useLanguage();
+    const lang = language === 'se' ? se : en;
 
     useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const data = await fetchUserData(id);
-          setUserData(data);
-        } catch (error) {
-          console.error('Error fetching user profile:', error);
+        const fetchData = async () => {
+            try {
+                const response = await axios.get(
+                    `http://localhost:8800/accounts/${id}`
+                )
+                setUserData(response.data)
+            } catch (error) {
+                console.error('Error fetching user profile:', error)
+            }
         }
-      };
 
-      fetchData();
-    }, [id]);
+        fetchData()
+    }, [id])
 
     return (
-        <div style={{ margin: '100px' }}>
-            <p>User Profile</p>
-            <p>
-                Welcome {userData.parent_name}!
-            </p>
-            <p>Children:</p>
-            <ul>
-                {userData.children &&
-                    userData.children.map((child, index) => (
-                        <li key={index}>
-                            <Link to={`/childprofile/${child.id}/${child.schoolId}`}>Name: {child.name}</Link>
-                            <p>Age: {child.school_id}</p>
-                            <p>School: {child.school}</p>
-                        </li>
-                    ))}
-            </ul>
-        </div>
-    );
-};
+        <Container className="container">
+            <LeftPanel>
+                <List>
+                    {userData.children &&
+                        userData.children.map((child, index) => (
+                            <ListItem key={index}>
+                                <StyledLink
+                                    to={`/childprofile/${child.id}/${child.schoolId}`}
+                                >
+                                    {child.name}
+                                </StyledLink>
+                            </ListItem>
+                        ))}
+                </List>
+            </LeftPanel>
+            <RightPanel>
+                <ParentName>{lang.welcome_user} {userData.parent_name}!</ParentName>
+                <UserMessage>{lang.user_message}</UserMessage>
+            </RightPanel>
+        </Container>
+    )
+}
 
-export default UserProfile;
+export default UserProfile
+
+const Container = styled.div`
+    /* margin: 100px; */
+    display: flex;
+`
+
+const LeftPanel = styled.div`
+    flex: 1;
+`
+
+const RightPanel = styled.div`
+    flex: 1;
+`
+
+const ParentName = styled.p`
+    font-size: 36px;
+`
+
+const UserMessage = styled.p`
+    font-size: 20px;
+`
+
+const List = styled.ul`
+    list-style-type: none;
+    /* padding: 0; */
+`
+
+const ListItem = styled.li`
+    margin-bottom: 30px;
+    font-size: 36px;
+`
+
+const StyledLink = styled(Link)`
+    text-decoration: none;
+    color: black;
+`

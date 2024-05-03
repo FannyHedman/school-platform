@@ -16,126 +16,126 @@ const Sidebar = () => {
             <SidebarItem>
                 {lang.absence}
                 <DropdownMenu>
-                    <Link to="/view_absence">
+                    <StyledLink to="/view_absence">
                         <DropdownItem>{lang.view_absence}</DropdownItem>
-                    </Link>
-                    <Link to="/report_absence">
+                    </StyledLink>
+                    <StyledLink to="/report_absence">
                         <DropdownItem>
                             {lang.report_todays_abscent}
                         </DropdownItem>
-                    </Link>
-                    <Link to="/schedule_absence">
+                    </StyledLink>
+                    <StyledLink to="/schedule_absence">
                         <DropdownItem>{lang.schedule_absence}</DropdownItem>
-                    </Link>
+                    </StyledLink>
                 </DropdownMenu>
             </SidebarItem>
             <SidebarItem>
                 {lang.schedule}
                 <DropdownMenu>
-                <Link to={`/show/${childId}/${schoolId}`}>
+                    <StyledLink to={`/show/${childId}/${schoolId}`}>
                         <DropdownItem>{lang.view_schedule}</DropdownItem>
-                    </Link>
-                    <Link to={`/change/${childId}/${schoolId}`}>
+                    </StyledLink>
+                    <StyledLink to={`/change/${childId}/${schoolId}`}>
                         <DropdownItem>{lang.change_schedule}</DropdownItem>
-                    </Link>
-                    <Link to={`/requested/${childId}/${schoolId}`}>
+                    </StyledLink>
+                    <StyledLink to={`/requested/${childId}/${schoolId}`}>
                         <DropdownItem>{lang.req_schedule}</DropdownItem>
-                    </Link>
+                    </StyledLink>
                 </DropdownMenu>
             </SidebarItem>
             <SidebarItem>
                 {lang.information_from_school}
                 <DropdownMenu>
-                    <Link to="/view_absence">
+                    <StyledLink to="/view_absence">
                         <DropdownItem>{lang.weekly_letter}</DropdownItem>
-                    </Link>
-                    <Link to="/report_absence">
+                    </StyledLink>
+                    <StyledLink to="/report_absence">
                         <DropdownItem>{lang.important_dates}</DropdownItem>
-                    </Link>
-                    <Link to="/schedule_absence">
+                    </StyledLink>
+                    <StyledLink to="/schedule_absence">
                         <DropdownItem>{lang.lunch_menu}</DropdownItem>
-                    </Link>
+                    </StyledLink>
                 </DropdownMenu>
             </SidebarItem>{' '}
             <SidebarItem>
                 {lang.contact_school}
                 <DropdownMenu>
-                    <Link to={`/contact/teacher/${schoolId}/${childId}`}>
+                    <StyledLink to={`/contact/teacher/${schoolId}/${childId}`}>
                         <DropdownItem>{lang.contact_teacher}</DropdownItem>
-                    </Link>
-                    <Link to={`/contact/management/${schoolId}/${childId}`}>
+                    </StyledLink>
+                    <StyledLink to={`/contact/management/${schoolId}/${childId}`}>
                         <DropdownItem>{lang.contact_management}</DropdownItem>
-                    </Link>
-                    <Link to={`/contact/health/${schoolId}/${childId}`}>
+                    </StyledLink>
+                    <StyledLink to={`/contact/health/${schoolId}/${childId}`}>
                         <DropdownItem>{lang.contact_health}</DropdownItem>
-                    </Link>
-                    <Link to={`/contact/parent/${schoolId}/${childId}`}>
+                    </StyledLink>
+                    <StyledLink to={`/contact/parent/${schoolId}/${childId}`}>
                         <DropdownItem>{lang.contact_parents}</DropdownItem>
-                    </Link>
+                    </StyledLink>
                 </DropdownMenu>
             </SidebarItem>{' '}
             <SidebarItem>
                 {lang.my_page}
                 <DropdownMenu>
-                    <Link to="/view_absence">
+                    <StyledLink to="/view_absence">
                         <DropdownItem>
                             {lang.parent_contact_details}
                         </DropdownItem>
-                    </Link>
-                    <Link to="/report_absence">
+                    </StyledLink>
+                    <StyledLink to="/report_absence">
                         <DropdownItem>{lang.parent_children}</DropdownItem>
-                    </Link>
-                    <Link to="/schedule_absence">
+                    </StyledLink>
+                    <StyledLink to="/schedule_absence">
                         <DropdownItem>{lang.parent_income}</DropdownItem>
-                    </Link>
+                    </StyledLink>
                 </DropdownMenu>
             </SidebarItem>{' '}
             <SidebarItem>
                 {lang.applications}
                 {/* <DropdownMenu>
-                    <Link to="/view_absence">
+                    <StyledLink to="/view_absence">
                         <DropdownItem>{lang.view_absence}</DropdownItem>
-                    </Link>
-                    <Link to="/report_absence">
+                    </StyledLink>
+                    <StyledLink to="/report_absence">
                         <DropdownItem>
                             {lang.report_todays_abscent}
                         </DropdownItem>
-                    </Link>
-                    <Link to="/schedule_absence">
+                    </StyledLink>
+                    <StyledLink to="/schedule_absence">
                         <DropdownItem>{lang.schedule_absence}</DropdownItem>
-                    </Link>
+                    </StyledLink>
                 </DropdownMenu> */}
             </SidebarItem>{' '}
             <SidebarItem>
                 {lang.fees}
                 {/* <DropdownMenu>
-                    <Link to="/view_absence">
+                    <StyledLink to="/view_absence">
                         <DropdownItem>{lang.view_absence}</DropdownItem>
-                    </Link>
-                    <Link to="/report_absence">
+                    </StyledLink>
+                    <StyledLink to="/report_absence">
                         <DropdownItem>
                             {lang.report_todays_abscent}
                         </DropdownItem>
-                    </Link>
-                    <Link to="/schedule_absence">
+                    </StyledLink>
+                    <StyledLink to="/schedule_absence">
                         <DropdownItem>{lang.schedule_absence}</DropdownItem>
-                    </Link>
+                    </StyledLink>
                 </DropdownMenu> */}
             </SidebarItem>
             <SidebarItem>
                 {lang.howto_title}
                 {/* <DropdownMenu>
-                    <Link to="/view_absence">
+                    <StyledLink to="/view_absence">
                         <DropdownItem>{lang.view_absence}</DropdownItem>
-                    </Link>
-                    <Link to="/report_absence">
+                    </StyledLink>
+                    <StyledLink to="/report_absence">
                         <DropdownItem>
                             {lang.report_todays_abscent}
                         </DropdownItem>
-                    </Link>
-                    <Link to="/schedule_absence">
+                    </StyledLink>
+                    <StyledLink to="/schedule_absence">
                         <DropdownItem>{lang.schedule_absence}</DropdownItem>
-                    </Link>
+                    </StyledLink>
                 </DropdownMenu> */}
             </SidebarItem>
         </SidebarContainer>
@@ -145,20 +145,29 @@ const Sidebar = () => {
 export default Sidebar
 
 const SidebarContainer = styled.div`
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin-top: 80px;
+    height: 100vh;
     width: 250px;
     background-color: #333;
     color: #fff;
     padding: 20px;
+    overflow-y: auto;
 `
 
 const DropdownMenu = styled.div`
     display: none;
-    padding-left: 20px;
+    padding-left: 10px;
     margin-top: 5px;
+    text-align: left;
 `
 
 const SidebarItem = styled.div`
-    margin-bottom: 15px;
+    margin-bottom: 25px;
+    text-align: left;
+    font-size: 22px;
 
     &:hover ${DropdownMenu} {
         display: block;
@@ -168,8 +177,13 @@ const SidebarItem = styled.div`
 const DropdownItem = styled.div`
     padding: 5px 0;
     cursor: pointer;
+    font-size: 18px;
 
     &:hover {
         color: #ffd700;
     }
 `
+
+const StyledLink = styled(Link)`
+    text-decoration: none;
+    color: white;`

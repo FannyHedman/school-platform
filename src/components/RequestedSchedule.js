@@ -163,7 +163,7 @@ const RequestedSchedule = () => {
   const [showModal, setShowModal] = useState(false);
   const [userData, setUserData] = useState({});
   const { childId, schoolId } = useParams();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -285,7 +285,6 @@ const RequestedSchedule = () => {
       </ul>
       <button onClick={handleSubmit}>Submit</button>
       {showModal && <ConfirmationModalReq handleClose={() => setShowModal(false)} />}
-      <Sidebar/>
     </div>
   );
 };

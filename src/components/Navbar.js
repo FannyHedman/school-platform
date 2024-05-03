@@ -1,14 +1,18 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { primaryColor, secondaryColor, textColor } from '../styles/colors'
+import { primaryColor, textColor } from '../styles/colors'
 import LanguageSwitch from './language/LanguageSwitch'
+import { useLocation } from 'react-router-dom' // Import useLocation
 import { useLanguage } from '../components/language/LanguageContext'
 import en from '../components/language/languages/EN.json'
 import se from '../components/language/languages/SE.json'
+import { Link } from 'react-router-dom'
+
 
 const NavBar = () => {
     const { language } = useLanguage()
     const lang = language === 'se' ? se : en
+    const location = useLocation(); // Get current location
 
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -20,11 +24,14 @@ const NavBar = () => {
         <NavbarContainer>
             <BrandName></BrandName>
             <NavLinks className={isMobileMenuOpen ? 'open' : ''}>
-                <NavLink class="scroll-link" href="#home">
+                <NavLink className="scroll-link" href="#home">
                     {lang.navbar_startpage}
                 </NavLink>
-                <NavLink href="#skills">{lang.navbar_howto}</NavLink>
-                <NavLink href="#contact">{lang.navbar_contact}</NavLink>
+                {/* Conditionally render the "Skills" NavLink */}
+                {location.pathname !== "/" && (
+                    <NavLink href="#skills">{lang.navbar_howto}</NavLink>
+                )}
+                <StyledLink to={`/customer-service/`}>{lang.navbar_contact}</StyledLink>
                 <LanguageSwitch />
             </NavLinks>
             <MobileMenuIcon
@@ -40,6 +47,7 @@ const NavBar = () => {
 }
 
 export default NavBar
+
 
 const NavbarContainer = styled.nav`
     position: fixed;
@@ -87,6 +95,22 @@ const NavLinks = styled.div`
         font-size: 18px;
         background-color: ${primaryColor};
         border-radius: 8px;
+    }
+`
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+    color: ${textColor};
+    margin: 0 15px;
+    transition: transform 0.2s ease-in-out;
+
+    &:hover {
+        text-decoration: none;
+        transform: scale(1.1);
+    }
+
+    @media (max-width: 767px) {
+        padding: 1%;
     }
 `
 
