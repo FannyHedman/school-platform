@@ -19,26 +19,38 @@ import Sidebar from './components/SideBar'
 function App() {
 
   const [userId, setUserId] = useState('');
+  const [childIds, setChildIds] = useState([]);
+  const [schoolId, setSchoolId] = useState('');
+  const [childId, setChildId] = useState('');
+
 
   useEffect(() => {
         const storedId = localStorage.getItem('userId');
+        const storedChildIds = localStorage.getItem('childIds');
+        const storedSchoolId = localStorage.getItem('schoolId');
+        const storedChildId = localStorage.getItem('childId');
+
     setUserId(storedId);
+    setChildIds(storedChildIds ? JSON.parse(storedChildIds) : []);
+    setSchoolId(storedSchoolId);
+    setChildId(storedChildId);
+
   }, []);
     return (
         <div className="App">
             <LanguageProvider>
                 <BrowserRouter>
                 <NavBar userId={userId}/>
-                <Sidebar userId={userId}/>
+                <Sidebar userId={userId} childIds={childIds} schoolId={schoolId} childId={childId}/>
                     <Routes>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/customer-service" element={<CustomerServicePage />} />
-                        <Route path="/profile/:id" element={<Profile />} />
+                        <Route path="/profile/:userId" element={<Profile childId={childId}/>} />
                         <Route path="/usercontact/:userId" element={<UserContactDetails />} />
-                        <Route path="/childprofile/:id/:schoolId" element={<ChildProfilePage />} />
+                        <Route path="/childprofile/:id" element={<ChildProfilePage />} />
                         <Route path="/contact/:type/:schoolId/:childId" element={<ContactComponent />} />
                         {/* <Route path="/schedule/:childId/*" element={<SchedulePage />} /> */}
-                        <Route path="/show/:childId/:schoolId" element={<ShowSchedule />} />
+                        <Route path="/show/:childId" element={<ShowSchedule childId={childId} />} />
                         <Route path="/change/:childId/:schoolId" element={<ChildSchedule />} />
                         <Route path="/requested/:childId/:schoolId" element={<RequestedSchedule />} />
 

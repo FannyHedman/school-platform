@@ -12,22 +12,33 @@ export const fetchUserData = async (userId) => {
         return response.data
     } catch (error) {
         console.error('Error fetching user data:', error)
-        throw error // Propagate the error to the caller
+        throw error 
     }
 }
 
-export const fetchChildProfile = async (childId, schoolId) => {
-    try {
-        const response = await apiService.get(
-            `/childprofile/${childId}/${schoolId}`
-        )
-        return response.data
+// export const fetchChildProfile = async (childId, schoolId) => {
+//     try {
+//         const response = await apiService.get(
+//             `/childprofile/${childId}/${schoolId}`
+//         )
+//         return response.data
 
-    } catch (error) {
-        console.error('Error fetching child profile:', error)
-        throw error // Propagate the error to the caller
-    }
-}
+//     } catch (error) {
+//         console.error('Error fetching child profile:', error)
+//         throw error // Propagate the error to the caller
+//     }
+// }
+
+export const fetchChildProfile = async (childId) => {
+  try {
+      const response = await apiService.get(`/childprofile/${childId}`);
+      return response.data;
+  } catch (error) {
+      console.error('Error fetching child profile:', error);
+      throw error;
+  }
+};
+
 
 export const fetchContacts = async (type, schoolId) => {
     try {
