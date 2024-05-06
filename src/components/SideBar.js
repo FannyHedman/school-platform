@@ -6,8 +6,8 @@ import { useLanguage } from '../components/language/LanguageContext'
 import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 
-const Sidebar = ({userId}) => {
-    const { id: childId, schoolId } = useParams()
+const Sidebar = ({userId, childIds, childId}) => {
+    // const { id: childId, schoolId } = useParams()
 
     const { language } = useLanguage()
     const lang = language === 'se' ? se : en
@@ -32,13 +32,13 @@ const Sidebar = ({userId}) => {
             <SidebarItem>
                 {lang.schedule}
                 <DropdownMenu>
-                    <StyledLink to={`/show/${childId}/${schoolId}`}>
+                    <StyledLink to={`/show/${childId}`}>
                         <DropdownItem>{lang.view_schedule}</DropdownItem>
                     </StyledLink>
-                    <StyledLink to={`/change/${childId}/${schoolId}`}>
+                    <StyledLink to={`/change/${childId}`}>
                         <DropdownItem>{lang.change_schedule}</DropdownItem>
                     </StyledLink>
-                    <StyledLink to={`/requested/${childId}/${schoolId}`}>
+                    <StyledLink to={`/requested/${childId}`}>
                         <DropdownItem>{lang.req_schedule}</DropdownItem>
                     </StyledLink>
                 </DropdownMenu>
@@ -60,7 +60,7 @@ const Sidebar = ({userId}) => {
             <SidebarItem>
                 {lang.contact_school}
                 <DropdownMenu>
-                    <StyledLink to={`/contact/teacher/${schoolId}/${childId}`}>
+                    {/* <StyledLink to={`/contact/teacher/${schoolId}/${childId}`}>
                         <DropdownItem>{lang.contact_teacher}</DropdownItem>
                     </StyledLink>
                     <StyledLink to={`/contact/management/${schoolId}/${childId}`}>
@@ -71,7 +71,7 @@ const Sidebar = ({userId}) => {
                     </StyledLink>
                     <StyledLink to={`/contact/parent/${schoolId}/${childId}`}>
                         <DropdownItem>{lang.contact_parents}</DropdownItem>
-                    </StyledLink>
+                    </StyledLink> */}
                 </DropdownMenu>
             </SidebarItem>{' '}
             <SidebarItem>

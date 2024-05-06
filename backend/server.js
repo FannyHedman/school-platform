@@ -50,13 +50,59 @@ app.get('/accounts', async (req, res) => {
 
 app.get('/accounts/:userId', async (req, res) => {
   const { userId } = req.params;
+  // try {
+  //     const result = await client.query('SELECT * FROM accounts WHERE id = $1', [userId]);
+  //     res.json(result.rows);
+  // } catch (err) {
+  //     console.error(err);
+  //     res.sendStatus(500);
+  // }
+
   try {
-      const result = await client.query('SELECT * FROM accounts WHERE id = $1', [userId]);
-      res.json(result.rows);
-  } catch (err) {
-      console.error(err);
-      res.sendStatus(500);
-  }
+    const parentQuery = await client.query(
+        'SELECT username, parent_name FROM accounts WHERE id = $1',
+        [userId]
+    )
+
+    const childrenQuery = await client.query(
+        'SELECT name, date_of_birth, school, child_id, school_id FROM children WHERE parent_id = $1',
+        [userId]
+    )
+
+    if (parentQuery.rows.length === 0) {
+        res.status(404).send('User not found')
+        return
+    }
+
+    const userData = {
+        parent_name: parentQuery.rows[0].parent_name,
+        children: childrenQuery.rows.map((child) => {
+            const today = new Date()
+            const birthDate = new Date(child.date_of_birth)
+            let age = today.getFullYear() - birthDate.getFullYear()
+            const monthDiff = today.getMonth() - birthDate.getMonth()
+            if (
+                monthDiff < 0 ||
+                (monthDiff === 0 && today.getDate() < birthDate.getDate())
+            ) {
+                age--
+            }
+
+            return {
+                id: child.child_id,
+                name: child.name,
+                age: age,
+                school: child.school,
+                schoolId: child.school_id
+            }
+        })
+    }
+
+    res.status(200).json(userData)
+} catch (error) {
+    console.error('Error fetching user profile:', error)
+    res.status(500).send('Internal Server Error')
+}
 });
 
 app.post('/accounts', async (req, res) => {
@@ -73,61 +119,78 @@ app.post('/accounts', async (req, res) => {
     )
 
     if (user) {
-        res.status(200).json({ id: user.id, message: 'Logged in' })
-    } else {
-        res.status(404).send('Not found')
-    }
+      // Fetch children and schools associated with the user
+      const childrenQuery = await client.query(
+          'SELECT child_id FROM children WHERE parent_id = $1',
+          [user.id]
+      );
+
+      // const schoolsQuery = await client.query(
+      //     'SELECT id FROM schools WHERE parent_id = $1',
+      //     [user.id]
+      // );
+
+      const userData = {
+          id: user.id,
+          children: childrenQuery.rows.map(child => child.child_id),
+          // schools: schoolsQuery.rows.map(school => school.id)
+      };
+
+      res.status(200).json(userData);
+  } else {
+      res.status(404).send('Not found');
+  }
 })
 
-app.get('/accounts/:id', async (req, res) => {
-    const { id } = req.params
+// app.get('/accounts/:id', async (req, res) => {
+//     const { id } = req.params
 
-    try {
-        const parentQuery = await client.query(
-            'SELECT username, parent_name FROM accounts WHERE id = $1',
-            [id]
-        )
+//     try {
+//         const parentQuery = await client.query(
+//             'SELECT username, parent_name FROM accounts WHERE id = $1',
+//             [id]
+//         )
 
-        const childrenQuery = await client.query(
-            'SELECT name, date_of_birth, school, child_id, school_id FROM children WHERE parent_id = $1',
-            [id]
-        )
+//         const childrenQuery = await client.query(
+//             'SELECT name, date_of_birth, school, child_id, school_id FROM children WHERE parent_id = $1',
+//             [id]
+//         )
 
-        if (parentQuery.rows.length === 0) {
-            res.status(404).send('User not found')
-            return
-        }
+//         if (parentQuery.rows.length === 0) {
+//             res.status(404).send('User not found')
+//             return
+//         }
 
-        const userData = {
-            parent_name: parentQuery.rows[0].parent_name,
-            children: childrenQuery.rows.map((child) => {
-                const today = new Date()
-                const birthDate = new Date(child.date_of_birth)
-                let age = today.getFullYear() - birthDate.getFullYear()
-                const monthDiff = today.getMonth() - birthDate.getMonth()
-                if (
-                    monthDiff < 0 ||
-                    (monthDiff === 0 && today.getDate() < birthDate.getDate())
-                ) {
-                    age--
-                }
+//         const userData = {
+//             parent_name: parentQuery.rows[0].parent_name,
+//             children: childrenQuery.rows.map((child) => {
+//                 const today = new Date()
+//                 const birthDate = new Date(child.date_of_birth)
+//                 let age = today.getFullYear() - birthDate.getFullYear()
+//                 const monthDiff = today.getMonth() - birthDate.getMonth()
+//                 if (
+//                     monthDiff < 0 ||
+//                     (monthDiff === 0 && today.getDate() < birthDate.getDate())
+//                 ) {
+//                     age--
+//                 }
 
-                return {
-                    id: child.child_id,
-                    name: child.name,
-                    age: age,
-                    school: child.school,
-                    schoolId: child.school_id
-                }
-            })
-        }
+//                 return {
+//                     id: child.child_id,
+//                     name: child.name,
+//                     age: age,
+//                     school: child.school,
+//                     schoolId: child.school_id
+//                 }
+//             })
+//         }
 
-        res.status(200).json(userData)
-    } catch (error) {
-        console.error('Error fetching user profile:', error)
-        res.status(500).send('Internal Server Error')
-    }
-})
+//         res.status(200).json(userData)
+//     } catch (error) {
+//         console.error('Error fetching user profile:', error)
+//         res.status(500).send('Internal Server Error')
+//     }
+// })
 
 // app.get('/childprofile/:id', async (req, res) => {
 //   const { id } = req.params;
@@ -165,44 +228,86 @@ app.get('/accounts/:id', async (req, res) => {
 //   }
 // } )
 
-app.get('/childprofile/:id/:schoolId', async (req, res) => {
-    const { id, schoolId } = req.params
+// app.get('/childprofile/:id/:schoolId', async (req, res) => {
+//     const { id, schoolId } = req.params
 
-    try {
-        const childrenQuery = await client.query(
-            'SELECT name, date_of_birth, school, child_id, school_id FROM children WHERE child_id = $1 AND school_id = $2',
-            [id, schoolId]
-        )
+//     try {
+//         const childrenQuery = await client.query(
+//             'SELECT name, date_of_birth, school, child_id, school_id FROM children WHERE child_id = $1 AND school_id = $2',
+//             [id, schoolId]
+//         )
 
-        const userData = {
-            children: childrenQuery.rows.map((child) => {
-                const today = new Date()
-                const birthDate = new Date(child.date_of_birth)
-                let age = today.getFullYear() - birthDate.getFullYear()
-                const monthDiff = today.getMonth() - birthDate.getMonth()
-                if (
-                    monthDiff < 0 ||
-                    (monthDiff === 0 && today.getDate() < birthDate.getDate())
-                ) {
-                    age--
-                }
+//         const userData = {
+//             children: childrenQuery.rows.map((child) => {
+//                 const today = new Date()
+//                 const birthDate = new Date(child.date_of_birth)
+//                 let age = today.getFullYear() - birthDate.getFullYear()
+//                 const monthDiff = today.getMonth() - birthDate.getMonth()
+//                 if (
+//                     monthDiff < 0 ||
+//                     (monthDiff === 0 && today.getDate() < birthDate.getDate())
+//                 ) {
+//                     age--
+//                 }
 
-                return {
-                    id: child.child_id,
-                    name: child.name,
-                    age: age,
-                    school: child.school,
-                    schoolId: child.school_id
-                }
-            })
-        }
+//                 return {
+//                     id: child.child_id,
+//                     name: child.name,
+//                     age: age,
+//                     school: child.school,
+//                     schoolId: child.school_id
+//                 }
+//             })
+//         }
 
-        res.status(200).json(userData)
-    } catch (error) {
-        console.error('Error fetching child profile:', error)
-        res.status(500).send('Internal Server Error')
-    }
-})
+//         res.status(200).json(userData)
+//     } catch (error) {
+//         console.error('Error fetching child profile:', error)
+//         res.status(500).send('Internal Server Error')
+//     }
+// })
+
+app.get('/childprofile/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+      // Fetch child profile data based on the child ID
+      const childrenQuery = await client.query(
+          'SELECT name, date_of_birth, school, child_id, school_id FROM children WHERE child_id = $1',
+          [id]
+      );
+
+      // Construct user data object
+      const userData = {
+          children: childrenQuery.rows.map((child) => {
+              const today = new Date();
+              const birthDate = new Date(child.date_of_birth);
+              let age = today.getFullYear() - birthDate.getFullYear();
+              const monthDiff = today.getMonth() - birthDate.getMonth();
+              if (
+                  monthDiff < 0 ||
+                  (monthDiff === 0 && today.getDate() < birthDate.getDate())
+              ) {
+                  age--;
+              }
+
+              return {
+                  id: child.child_id,
+                  name: child.name,
+                  age: age,
+                  school: child.school,
+                  schoolId: child.school_id,
+              };
+          }),
+      };
+
+      res.status(200).json(userData);
+  } catch (error) {
+      console.error('Error fetching child profile:', error);
+      res.status(500).send('Internal Server Error');
+  }
+});
+
 
 app.get('/contacts/:type/:schoolId', async (req, res) => {
     const { type, schoolId } = req.params

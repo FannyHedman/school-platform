@@ -7,37 +7,78 @@ import { useLanguage } from '../components/language/LanguageContext'
 import en from '../components/language/languages/EN.json'
 import se from '../components/language/languages/SE.json'
 
+// const ChildProfile = () => {
+//     const { id } = useParams()
+//     const [schoolId, setSchoolId] = useState('');
+//     const [userData, setUserData] = useState({})
+//     const [todaysSchedule, setTodaysSchedule] = useState([])
+//     const navigate = useNavigate()
+//     const {language} = useLanguage();
+//     const lang = language === 'se' ? se : en
+
+
+//     useEffect(() => {
+//         const fetchData = async () => {
+//             try {
+//                 const userDataResponse = await fetchChildProfile(id, schoolId)
+//                 setUserData(userDataResponse)
+//                 setSchoolId(userDataResponse.schoolId);
+//                 localStorage.setItem('schoolId', userDataResponse.schoolId);
+
+//                 const scheduleResponse = await fetchSchedule(id)
+//                 const today = new Date().toLocaleDateString('en-US', {
+//                     weekday: 'long'
+//                 })
+//                 const dayId = getDayId(today)
+//                 const todaysScheduleData = scheduleResponse.filter(
+//                     (item) => item.day_id === dayId
+//                 )
+//                 setTodaysSchedule(todaysScheduleData)
+//             } catch (error) {
+//                 console.error('Error fetching data:', error)
+//             }
+//         }
+
+//         fetchData()
+//     }, [id, schoolId])
 const ChildProfile = () => {
-    const { id, schoolId } = useParams()
-    const [userData, setUserData] = useState({})
-    const [todaysSchedule, setTodaysSchedule] = useState([])
-    const navigate = useNavigate()
-    const {language} = useLanguage();
-    const lang = language === 'se' ? se : en
+  const { id } = useParams()
+  const [userData, setUserData] = useState({})
+  const [todaysSchedule, setTodaysSchedule] = useState([])
+  const navigate = useNavigate()
+  const {language} = useLanguage();
+  const lang = language === 'se' ? se : en
+
+  useEffect(() => {
+      const fetchData = async () => {
+          try {
+              // Fetch child profile data
+              const userDataResponse = await fetchChildProfile(id)
+              setUserData(userDataResponse)
+              localStorage.setItem('childId', id);
 
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const userDataResponse = await fetchChildProfile(id, schoolId)
-                setUserData(userDataResponse)
+              // Fetch schoolId based on childId
+              const schoolId = userDataResponse.schoolId;
+              localStorage.setItem('schoolId', schoolId);
 
-                const scheduleResponse = await fetchSchedule(id)
-                const today = new Date().toLocaleDateString('en-US', {
-                    weekday: 'long'
-                })
-                const dayId = getDayId(today)
-                const todaysScheduleData = scheduleResponse.filter(
-                    (item) => item.day_id === dayId
-                )
-                setTodaysSchedule(todaysScheduleData)
-            } catch (error) {
-                console.error('Error fetching data:', error)
-            }
-        }
+              // Fetch schedule data
+              const scheduleResponse = await fetchSchedule(id)
+              const today = new Date().toLocaleDateString('en-US', {
+                  weekday: 'long'
+              })
+              const dayId = getDayId(today)
+              const todaysScheduleData = scheduleResponse.filter(
+                  (item) => item.day_id === dayId
+              )
+              setTodaysSchedule(todaysScheduleData)
+          } catch (error) {
+              console.error('Error fetching data:', error)
+          }
+      }
 
-        fetchData()
-    }, [id, schoolId])
+      fetchData()
+  }, [id])
 
     const handleBack = () => {
         navigate(-1)
@@ -88,7 +129,6 @@ const ChildProfile = () => {
                     ))}
                 </ul>
             </Schedule>
-            <SideBar id={id} schoolId={schoolId} />
         </Container>
     )
 }
