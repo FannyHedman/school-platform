@@ -12,7 +12,7 @@ export const fetchUserData = async (userId) => {
         return response.data
     } catch (error) {
         console.error('Error fetching user data:', error)
-        throw error 
+        throw error
     }
 }
 

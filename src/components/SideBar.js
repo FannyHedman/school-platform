@@ -3,15 +3,25 @@ import styled from 'styled-components'
 import en from '../components/language/languages/EN.json'
 import se from '../components/language/languages/SE.json'
 import { useLanguage } from '../components/language/LanguageContext'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 
-const Sidebar = ({userId, childIds, childId}) => {
+const Sidebar = ({ userId, childIds }) => {
     // const { id: childId, schoolId } = useParams()
-
     const { language } = useLanguage()
     const lang = language === 'se' ? se : en
+    const storedChildId = localStorage.getItem('childId')
+
+    const location = useLocation() // Get current URL information
+
+    const handleChildChange = (childId) => {
+        // Update URL with selected childId (assuming you have a function to update URL)
+        // navigate(`/show/${childId}`); // Example using react-router-dom navigate
+    }
+
     return (
+      <div>
+      {!(location.pathname === "/" || location.pathname.startsWith("/profile/")) && (
         <SidebarContainer>
             <SidebarItem>
                 {lang.absence}
@@ -32,13 +42,18 @@ const Sidebar = ({userId, childIds, childId}) => {
             <SidebarItem>
                 {lang.schedule}
                 <DropdownMenu>
-                    <StyledLink to={`/show/${childId}`}>
+                    <StyledLink
+                        to={`/show/${storedChildId || 'select-child'}`}
+                        onClick={() => handleChildChange(storedChildId)}
+                    >
                         <DropdownItem>{lang.view_schedule}</DropdownItem>
                     </StyledLink>
-                    <StyledLink to={`/change/${childId}`}>
+                    <StyledLink to={`/change/${storedChildId || 'select-child'}`}
+                        onClick={() => handleChildChange(storedChildId)}>
                         <DropdownItem>{lang.change_schedule}</DropdownItem>
                     </StyledLink>
-                    <StyledLink to={`/requested/${childId}`}>
+                    <StyledLink to={`/requested/${storedChildId}`}
+                        >
                         <DropdownItem>{lang.req_schedule}</DropdownItem>
                     </StyledLink>
                 </DropdownMenu>
@@ -60,18 +75,18 @@ const Sidebar = ({userId, childIds, childId}) => {
             <SidebarItem>
                 {lang.contact_school}
                 <DropdownMenu>
-                    {/* <StyledLink to={`/contact/teacher/${schoolId}/${childId}`}>
+                    <StyledLink to={`/contact/teacher/${storedChildId}`}>
                         <DropdownItem>{lang.contact_teacher}</DropdownItem>
                     </StyledLink>
-                    <StyledLink to={`/contact/management/${schoolId}/${childId}`}>
+                    <StyledLink to={`/contact/management/${storedChildId}`}>
                         <DropdownItem>{lang.contact_management}</DropdownItem>
                     </StyledLink>
-                    <StyledLink to={`/contact/health/${schoolId}/${childId}`}>
+                    <StyledLink to={`/contact/health/${storedChildId}`}>
                         <DropdownItem>{lang.contact_health}</DropdownItem>
                     </StyledLink>
-                    <StyledLink to={`/contact/parent/${schoolId}/${childId}`}>
+                    <StyledLink to={`/contact/parent/${storedChildId}`}>
                         <DropdownItem>{lang.contact_parents}</DropdownItem>
-                    </StyledLink> */}
+                    </StyledLink>
                 </DropdownMenu>
             </SidebarItem>{' '}
             <SidebarItem>
@@ -139,6 +154,8 @@ const Sidebar = ({userId, childIds, childId}) => {
                 </DropdownMenu> */}
             </SidebarItem>
         </SidebarContainer>
+      )},
+      </div>
     )
 }
 
@@ -186,4 +203,5 @@ const DropdownItem = styled.div`
 
 const StyledLink = styled(Link)`
     text-decoration: none;
-    color: white;`
+    color: white;
+`
