@@ -41,19 +41,18 @@ function App() {
             <LanguageProvider>
                 <BrowserRouter>
                 <NavBar userId={userId}/>
-                <Sidebar userId={userId} childIds={childIds} schoolId={schoolId} childId={childId}/>
+                <Sidebar userId={userId} childIds={childIds} schoolId={schoolId}/>
                     <Routes>
                         <Route path="/" element={<HomePage />} />
                         <Route path="/customer-service" element={<CustomerServicePage />} />
                         <Route path="/profile/:userId" element={<Profile childId={childId}/>} />
                         <Route path="/usercontact/:userId" element={<UserContactDetails />} />
                         <Route path="/childprofile/:id" element={<ChildProfilePage />} />
-                        <Route path="/contact/:type/:schoolId/:childId" element={<ContactComponent />} />
+                        <Route path="/contact/:type/:childId" element={<ContactComponent />} />
                         {/* <Route path="/schedule/:childId/*" element={<SchedulePage />} /> */}
-                        <Route path="/show/:childId" element={<ShowSchedule childId={childId} />} />
-                        <Route path="/change/:childId/:schoolId" element={<ChildSchedule />} />
-                        <Route path="/requested/:childId/:schoolId" element={<RequestedSchedule />} />
-
+                        <Route path="/show/:childId" element={<ShowSchedule />} />
+                        <Route path="/change/:childId" element={<ChildSchedule/>} />
+                        <Route path="/requested/:childId" element={<RequestedSchedule/>} />
                     </Routes>
                 </BrowserRouter>
                 {/* <NavBar /> */}

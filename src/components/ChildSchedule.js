@@ -210,7 +210,7 @@ import en from '../components/language/languages/EN.json'
 import se from '../components/language/languages/SE.json'
 
 const ChildSchedule = () => {
-  const { childId, schoolId } = useParams();
+  const { childId } = useParams();
   const [schedule, setSchedule] = useState([]);
   const [userData, setUserData] = useState({});
   const [updatedTimes, setUpdatedTimes] = useState({});
@@ -221,7 +221,7 @@ const ChildSchedule = () => {
     const fetchData = async () => {
       try {
         const [profileData, childSchedule] = await Promise.all([
-          fetchChildProfile(childId, schoolId),
+          fetchChildProfile(childId),
           fetchSchedule(childId)
         ]);
 
@@ -233,7 +233,7 @@ const ChildSchedule = () => {
     };
 
     fetchData();
-  }, [childId, schoolId]);
+  }, [childId]);
 
   const handleTimeChange = (dayId, field, value) => {
     setUpdatedTimes((prev) => ({
@@ -250,7 +250,7 @@ const ChildSchedule = () => {
       await updateSchedule(childId, dayId, startTime, endTime);
 
       // Refresh schedule after update
-      fetchChildProfile(childId, schoolId);
+      fetchChildProfile(childId);
       fetchSchedule(childId);
     } catch (error) {
       console.error('Error updating child schedule:', error);

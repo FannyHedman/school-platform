@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import { useLanguage } from '../components/language/LanguageContext'
 import en from '../components/language/languages/EN.json'
 import se from '../components/language/languages/SE.json'
+import { useLocation } from 'react-router-dom'
 
 // const ChildProfile = () => {
 //     const { id } = useParams()
@@ -48,37 +49,76 @@ const ChildProfile = () => {
   const navigate = useNavigate()
   const {language} = useLanguage();
   const lang = language === 'se' ? se : en
+  const location = useLocation();
+  const [updatedId, setUpdatedId] = useState(id);
+
+  // useEffect(() => {
+  //     const fetchData = async () => {
+  //         try {
+  //             // Fetch child profile data
+  //             const userDataResponse = await fetchChildProfile(id)
+  //             setUserData(userDataResponse)
+  //             localStorage.setItem('childId', id);
+
+
+  //             // Fetch schoolId based on childId
+  //             const schoolId = userDataResponse.schoolId;
+  //             localStorage.setItem('schoolId', schoolId);
+
+  //             // Fetch schedule data
+  //             const scheduleResponse = await fetchSchedule(id)
+  //             const today = new Date().toLocaleDateString('en-US', {
+  //                 weekday: 'long'
+  //             })
+  //             const dayId = getDayId(today)
+  //             const todaysScheduleData = scheduleResponse.filter(
+  //                 (item) => item.day_id === dayId
+  //             )
+  //             setTodaysSchedule(todaysScheduleData)
+  //         } catch (error) {
+  //             console.error('Error fetching data:', error)
+  //         }
+  //     }
+
+  //     fetchData()
+  // }, [id])
 
   useEffect(() => {
+    const storedChildId = localStorage.getItem('childId');
+
+    // Check if storedChildId exists and differs from URL param id
+    if (storedChildId && storedChildId !== id) {
+      // Update state with storedChildId if they differ
+      setUpdatedId(storedChildId); // Assuming you have a function to update state (id)
+    } else {
       const fetchData = async () => {
-          try {
-              // Fetch child profile data
-              const userDataResponse = await fetchChildProfile(id)
-              setUserData(userDataResponse)
-              localStorage.setItem('childId', id);
+        try {
+          // Fetch child profile data using id (either from URL or state)
+          const userDataResponse = await fetchChildProfile(id);
+          setUserData(userDataResponse);
+          localStorage.setItem('childId', id); // Update localStorage if necessary
 
+          const schoolId = userDataResponse.schoolId;
+          localStorage.setItem('schoolId', schoolId);
 
-              // Fetch schoolId based on childId
-              const schoolId = userDataResponse.schoolId;
-              localStorage.setItem('schoolId', schoolId);
+          // Fetch schedule data using id (either from URL or state)
+          const scheduleResponse = await fetchSchedule(id);
+          const today = new Date().toLocaleDateString('en-US', {
+            weekday: 'long',
+          });
+          const dayId = getDayId(today);
+          const todaysScheduleData = scheduleResponse.filter(
+            (item) => item.day_id === dayId
+          );
+          setTodaysSchedule(todaysScheduleData);
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      };
 
-              // Fetch schedule data
-              const scheduleResponse = await fetchSchedule(id)
-              const today = new Date().toLocaleDateString('en-US', {
-                  weekday: 'long'
-              })
-              const dayId = getDayId(today)
-              const todaysScheduleData = scheduleResponse.filter(
-                  (item) => item.day_id === dayId
-              )
-              setTodaysSchedule(todaysScheduleData)
-          } catch (error) {
-              console.error('Error fetching data:', error)
-          }
-      }
-
-      fetchData()
-  }, [id])
+      fetchData();
+    }
+  }, [updatedId, location]);
 
     const handleBack = () => {
         navigate(-1)
