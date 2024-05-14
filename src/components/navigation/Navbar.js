@@ -1,20 +1,19 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { primaryColor, textColor } from '../styles/colors'
-import LanguageSwitch from './language/LanguageSwitch'
+import { primaryColor, textColor } from '../../styles/colors'
+import LanguageSwitch from '../language/LanguageSwitch'
 import { useLocation } from 'react-router-dom' // Import useLocation
-import { useLanguage } from '../components/language/LanguageContext'
-import en from '../components/language/languages/EN.json'
-import se from '../components/language/languages/SE.json'
+import { useLanguage } from '../language/LanguageContext'
+import en from '../language/languages/EN.json'
+import se from '../language/languages/SE.json'
 import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
 
-
-const NavBar = ({userId}) => {
-  const { id } = useParams()
+const NavBar = ({ userId }) => {
+    const { id } = useParams()
     const { language } = useLanguage()
     const lang = language === 'se' ? se : en
-    const location = useLocation(); // Get current location
+    const location = useLocation() // Get current location
 
     const [isMobileMenuOpen, setMobileMenuOpen] = useState(false)
 
@@ -30,10 +29,12 @@ const NavBar = ({userId}) => {
                     {lang.navbar_startpage}
                 </NavLink>
                 {/* Conditionally render the "Skills" NavLink */}
-                {location.pathname !== "/" && (
+                {location.pathname !== '/' && (
                     <NavLink href="#skills">{lang.navbar_howto}</NavLink>
                 )}
-                <StyledLink to={`/customer-service/`}>{lang.navbar_contact}</StyledLink>
+                <StyledLink to={`/customer-service/`}>
+                    {lang.navbar_contact}
+                </StyledLink>
                 <StyledLink to={`/usercontact/${userId}`}>konto</StyledLink>
                 <LanguageSwitch />
             </NavLinks>
@@ -50,7 +51,6 @@ const NavBar = ({userId}) => {
 }
 
 export default NavBar
-
 
 const NavbarContainer = styled.nav`
     position: fixed;
@@ -102,7 +102,7 @@ const NavLinks = styled.div`
 `
 
 const StyledLink = styled(Link)`
-  text-decoration: none;
+    text-decoration: none;
     color: ${textColor};
     margin: 0 15px;
     transition: transform 0.2s ease-in-out;

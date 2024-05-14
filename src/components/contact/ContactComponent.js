@@ -87,7 +87,7 @@
 
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { fetchChildProfile, fetchContacts } from '../apiService'
+import { fetchChildProfile, fetchContacts } from '../../apiService'
 
 const ContactComponent = () => {
     const { type, childId } = useParams()
@@ -139,7 +139,7 @@ const ContactComponent = () => {
                         </li>
                     ))}
             </ul>
-            <h2>Contacts</h2>
+            <h2>{type}</h2>
             <ul>
                 {contacts.map((contact, index) => (
                     <li key={index}>

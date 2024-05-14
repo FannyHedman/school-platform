@@ -1,15 +1,14 @@
 import React, { useState } from 'react'
-import { useLanguage } from '../components/language/LanguageContext'
+import { useLanguage } from '../language/LanguageContext'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
-import en from '../components/language/languages/EN.json'
-import se from '../components/language/languages/SE.json'
+import en from '../language/languages/EN.json'
+import se from '../language/languages/SE.json'
 import styled from 'styled-components'
 
 const LoginComponent = () => {
     const { language } = useLanguage()
     const lang = language === 'se' ? se : en
-
 
     const [account, setAccount] = useState({
         id: '',
@@ -18,7 +17,7 @@ const LoginComponent = () => {
     })
 
     const [error, setError] = useState(false)
-    const navigate=useNavigate()
+    const navigate = useNavigate()
 
     const handleChange = (e) => {
         setAccount((prev) => ({ ...prev, [e.target.name]: e.target.value }))
@@ -35,13 +34,13 @@ const LoginComponent = () => {
             // const id = response.data.id
             // navigate(`/profile/${id}`)
             // console.log('logged in successfully')
-            const userId = response.data.id; // Retrieve user ID from response
-            const childIds = response.data.children;
-        localStorage.setItem('userId', userId); // Store user ID securely
-        localStorage.setItem('childIds', JSON.stringify(childIds));
+            const userId = response.data.id // Retrieve user ID from response
+            const childIds = response.data.children
+            localStorage.setItem('userId', userId) // Store user ID securely
+            localStorage.setItem('childIds', JSON.stringify(childIds))
 
-        navigate(`/profile/${userId}`);
-        console.log('logged in successfully');
+            navigate(`/profile/${userId}`)
+            console.log('logged in successfully')
         } catch (err) {
             console.log(err)
             setError(true)

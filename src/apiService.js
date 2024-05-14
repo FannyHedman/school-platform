@@ -93,6 +93,17 @@ export const updateSchedule = async (childId, dayId, startTime, endTime) => {
       throw error;
   }
 };
-// Define other functions for fetching data from different endpoints as needed
+
+
+export const reportAbsenceAllDay = async (childId, attending, dayId) => {
+  try {
+    await apiService.put(`/absence/${childId}`, { attending, dayId })
+    console.log('Absence reported successfully')
+  } catch (error) {
+    console.error('Error reporting absence:', error)
+    throw error
+  }
+}
+
 
 export default apiService

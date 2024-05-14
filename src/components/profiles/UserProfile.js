@@ -2,39 +2,38 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useParams, Link } from 'react-router-dom'
 import styled from 'styled-components'
-import { useLanguage } from '../components/language/LanguageContext'
-import en from '../components/language/languages/EN.json'
-import se from '../components/language/languages/SE.json'
-import { fetchUserData } from '../apiService'
+import { useLanguage } from '../language/LanguageContext'
+import en from '../language/languages/EN.json'
+import se from '../language/languages/SE.json'
+import { fetchUserData } from '../../apiService'
 
 const UserProfile = ({}) => {
     const { userId } = useParams()
     const [userData, setUserData] = useState({})
-    const {language} = useLanguage();
-    const lang = language === 'se' ? se : en;
+    const { language } = useLanguage()
+    const lang = language === 'se' ? se : en
 
     useEffect(() => {
-      const fetchData = async () => {
-          try {
-              const data = await fetchUserData(userId);
-              setUserData(data);
-          } catch (error) {
-              console.error('Error fetching user profile:', error);
-          }
-      };
+        const fetchData = async () => {
+            try {
+                const data = await fetchUserData(userId)
+                setUserData(data)
+            } catch (error) {
+                console.error('Error fetching user profile:', error)
+            }
+        }
 
-      fetchData();
-  }, [userId]);
+        fetchData()
+    }, [userId])
 
-//   const handleChangeChild = () => {
-//     localStorage.removeItem('childId');
-//     ;
-// };
+    //   const handleChangeChild = () => {
+    //     localStorage.removeItem('childId');
+    //     ;
+    // };
 
-const handleChangeChild = (childId) => {
-  localStorage.setItem('childId', childId);
-};
-
+    const handleChangeChild = (childId) => {
+        localStorage.setItem('childId', childId)
+    }
 
     return (
         <Container className="container">
@@ -43,14 +42,20 @@ const handleChangeChild = (childId) => {
                     {userData.children &&
                         userData.children.map((child, index) => (
                             <ListItem key={index}>
-                                <StyledLink to={`/childprofile/${child.id}`} onClick={() => handleChangeChild(child.id)}>{child.name}</StyledLink>
-
+                                <StyledLink
+                                    to={`/childprofile/${child.id}`}
+                                    onClick={() => handleChangeChild(child.id)}
+                                >
+                                    {child.name}
+                                </StyledLink>
                             </ListItem>
                         ))}
                 </List>
             </LeftPanel>
             <RightPanel>
-                <ParentName>{lang.welcome_user} {userData.parent_name}!</ParentName>
+                <ParentName>
+                    {lang.welcome_user} {userData.parent_name}!
+                </ParentName>
                 <UserMessage>{lang.user_message}</UserMessage>
             </RightPanel>
         </Container>
