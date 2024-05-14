@@ -1,0 +1,24 @@
+{
+  "meals": [
+    {
+      "day": 1,
+      "lunch": "Pasta Carbonara"
+    },
+    {
+      "day": 2,
+      "lunch": "Chicken Stir Fry"
+    },
+    {
+      "day": 3,
+      "lunch": "Vegetable Lasagna"
+    },
+    {
+      "day": 4,
+      "lunch": "Beef Tacos"
+    },
+    {
+      "day": 5,
+      "lunch": "Fish and Chips"
+    }
+  ]
+}

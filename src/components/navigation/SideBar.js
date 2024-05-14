@@ -83,7 +83,7 @@ const Sidebar = ({ userId, childIds }) => {
                                     {lang.important_dates}
                                 </DropdownItem>
                             </StyledLink>
-                            <StyledLink to="/schedule_absence">
+                            <StyledLink to="/lunch_menu">
                                 <DropdownItem>{lang.lunch_menu}</DropdownItem>
                             </StyledLink>
                         </DropdownMenu>

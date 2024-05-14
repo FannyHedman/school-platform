@@ -16,6 +16,7 @@ import UserContactDetails from './components/myPage/UserContactDetails'
 import { useEffect, useState } from 'react'
 import Sidebar from './components/navigation/SideBar'
 import ReportAbsence from './components/absence/ReportAbsence'
+import LunchMenu from './components/information/LunchMenu'
 // import NewsLetter from './components/news/NewsLetter'
 
 function App() {
@@ -81,6 +82,7 @@ function App() {
                             element={<RequestedSchedule />}
                         />
                         <Route path="/absence/:childId" element={<ReportAbsence/>}/>
+                        <Route path="/lunch_menu" element={<LunchMenu/>}/>
                         {/* <Route path="/weekly" element={NewsLetter}/> */}
                     </Routes>
                 </BrowserRouter>
