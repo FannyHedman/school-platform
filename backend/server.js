@@ -4,6 +4,8 @@ import express from 'express'
 import cors from 'cors'
 import bodyParser from 'body-parser'
 import { request } from 'http'
+import { readFileSync } from 'fs';
+
 
 const { Client } = pkg
 
@@ -507,6 +509,7 @@ app.put('/week_day_association/:childId', async (req, res) => {
 })
 
 // funkar ovan
+
 
 app.listen(8800, () => {
     console.log('server is running')

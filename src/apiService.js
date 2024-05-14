@@ -2,9 +2,15 @@ import axios from 'axios'
 
 const baseURL = 'http://localhost:8800' // Assuming your backend server is running locally on port 8800
 
+const jsonBaseURL = 'http://localhost:3000';
+
 const apiService = axios.create({
     baseURL
 })
+
+export const jsonService = axios.create({
+  jsonBaseURL
+});
 
 export const fetchUserData = async (userId) => {
     try {
@@ -101,6 +107,17 @@ export const reportAbsenceAllDay = async (childId, attending, dayId) => {
     console.log('Absence reported successfully')
   } catch (error) {
     console.error('Error reporting absence:', error)
+    throw error
+  }
+}
+
+export const fetchMeals = async () => {
+  try {
+    const response = await jsonService.get('/meals.json')
+    return response.data
+  }
+  catch (error) {
+    console.error('Error fetching meals:', error)
     throw error
   }
 }

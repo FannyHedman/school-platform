@@ -70,6 +70,7 @@ const ReportAbsence = () => {
                     <li key={index}>
                         <p>{item.day_name}</p>
                         <p>{item.start_time}</p>
+                        <p>{item.end_time}</p>
                     </li>
                 ))}
             </ul>
