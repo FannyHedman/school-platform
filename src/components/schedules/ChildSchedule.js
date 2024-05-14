@@ -199,155 +199,163 @@
 
 // export default ChildSchedule
 
-
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { fetchSchedule, fetchChildProfile } from '../apiService';
-import { updateSchedule } from '../apiService';
-import styled from 'styled-components';
-import { useLanguage } from '../components/language/LanguageContext'
-import en from '../components/language/languages/EN.json'
-import se from '../components/language/languages/SE.json'
+import React, { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+import { fetchSchedule, fetchChildProfile } from '../../apiService'
+import { updateSchedule } from '../../apiService'
+import styled from 'styled-components'
+import { useLanguage } from '../language/LanguageContext'
+import en from '../language/languages/EN.json'
+import se from '../language/languages/SE.json'
 
 const ChildSchedule = () => {
-  const { childId } = useParams();
-  const [schedule, setSchedule] = useState([]);
-  const [userData, setUserData] = useState({});
-  const [updatedTimes, setUpdatedTimes] = useState({});
-  const {language} = useLanguage();
-  const lang = language === 'se' ? se : en;
+    const { childId } = useParams()
+    const [schedule, setSchedule] = useState([])
+    const [userData, setUserData] = useState({})
+    const [updatedTimes, setUpdatedTimes] = useState({})
+    const { language } = useLanguage()
+    const lang = language === 'se' ? se : en
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const [profileData, childSchedule] = await Promise.all([
-          fetchChildProfile(childId),
-          fetchSchedule(childId)
-        ]);
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const [profileData, childSchedule] = await Promise.all([
+                    fetchChildProfile(childId),
+                    fetchSchedule(childId)
+                ])
 
-        setUserData(profileData);
-        setSchedule(childSchedule);
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
-    };
+                setUserData(profileData)
+                setSchedule(childSchedule)
+            } catch (error) {
+                console.error('Error fetching data:', error)
+            }
+        }
 
-    fetchData();
-  }, [childId]);
+        fetchData()
+    }, [childId])
 
-  const handleTimeChange = (dayId, field, value) => {
-    setUpdatedTimes((prev) => ({
-      ...prev,
-      [dayId]: { ...prev[dayId], [field]: value }
-    }));
-  };
-
-  const handleScheduleUpdate = async (dayId) => {
-    try {
-      const startTime = updatedTimes[dayId]?.start_time;
-      const endTime = updatedTimes[dayId]?.end_time;
-
-      await updateSchedule(childId, dayId, startTime, endTime);
-
-      // Refresh schedule after update
-      fetchChildProfile(childId);
-      fetchSchedule(childId);
-    } catch (error) {
-      console.error('Error updating child schedule:', error);
+    const handleTimeChange = (dayId, field, value) => {
+        setUpdatedTimes((prev) => ({
+            ...prev,
+            [dayId]: { ...prev[dayId], [field]: value }
+        }))
     }
-  };
 
-  return (
-    <Container className='container'>
-      <Heading>Child Schedule</Heading>
-      <ChildInfoList>
-        {userData.children &&
-          userData.children.map((child, index) => (
-            <ChildInfoItem key={index}>
-              <p>{child.name}</p>
-              <p>{child.school}</p>
-            </ChildInfoItem>
-          ))}
-      </ChildInfoList>
-      <ScheduleList>
-        {schedule.map((scheduleItem) => (
-          <ScheduleItem key={scheduleItem.day_id}>
-            <strong>{scheduleItem.day_name}</strong> - {' '}
-            {scheduleItem.start_time} to {scheduleItem.end_time}
-            <TimeInput
-              type="time"
-              value={updatedTimes[scheduleItem.day_id]?.start_time || ''}
-              onChange={(e) =>
-                handleTimeChange(
-                  scheduleItem.day_id,
-                  'start_time',
-                  e.target.value
-                )
-              }
-            />
-            to
-            <TimeInput
-              type="time"
-              value={updatedTimes[scheduleItem.day_id]?.end_time || ''}
-              onChange={(e) =>
-                handleTimeChange(
-                  scheduleItem.day_id,
-                  'end_time',
-                  e.target.value
-                )
-              }
-            />
-            <UpdateButton onClick={() => handleScheduleUpdate(scheduleItem.day_id)}>
-              {lang.update}
-            </UpdateButton>
-          </ScheduleItem>
-        ))}
-      </ScheduleList>
-    </Container>
-  );
-};
+    const handleScheduleUpdate = async (dayId) => {
+        try {
+            const startTime = updatedTimes[dayId]?.start_time
+            const endTime = updatedTimes[dayId]?.end_time
 
-export default ChildSchedule;
+            await updateSchedule(childId, dayId, startTime, endTime)
 
+            // Refresh schedule after update
+            fetchChildProfile(childId)
+            fetchSchedule(childId)
+        } catch (error) {
+            console.error('Error updating child schedule:', error)
+        }
+    }
+
+    return (
+        <Container className="container">
+            <Heading>Child Schedule</Heading>
+            <ChildInfoList>
+                {userData.children &&
+                    userData.children.map((child, index) => (
+                        <ChildInfoItem key={index}>
+                            <p>{child.name}</p>
+                            <p>{child.school}</p>
+                        </ChildInfoItem>
+                    ))}
+            </ChildInfoList>
+            <ScheduleList>
+                {schedule.map((scheduleItem) => (
+                    <ScheduleItem key={scheduleItem.day_id}>
+                        <strong>{scheduleItem.day_name}</strong> -{' '}
+                        {scheduleItem.start_time} to {scheduleItem.end_time}
+                        <TimeInput
+                            type="time"
+                            value={
+                                updatedTimes[scheduleItem.day_id]?.start_time ||
+                                ''
+                            }
+                            onChange={(e) =>
+                                handleTimeChange(
+                                    scheduleItem.day_id,
+                                    'start_time',
+                                    e.target.value
+                                )
+                            }
+                        />
+                        to
+                        <TimeInput
+                            type="time"
+                            value={
+                                updatedTimes[scheduleItem.day_id]?.end_time ||
+                                ''
+                            }
+                            onChange={(e) =>
+                                handleTimeChange(
+                                    scheduleItem.day_id,
+                                    'end_time',
+                                    e.target.value
+                                )
+                            }
+                        />
+                        <UpdateButton
+                            onClick={() =>
+                                handleScheduleUpdate(scheduleItem.day_id)
+                            }
+                        >
+                            {lang.update}
+                        </UpdateButton>
+                    </ScheduleItem>
+                ))}
+            </ScheduleList>
+        </Container>
+    )
+}
+
+export default ChildSchedule
 
 const Container = styled.div`
-  /* margin-top: 50px; */
-  padding: 20px;
-`;
+    /* margin-top: 50px; */
+    padding: 20px;
+`
 
 const Heading = styled.h2`
-  margin-bottom: 20px;
-`;
+    margin-bottom: 20px;
+`
 
 const ChildInfoList = styled.ul`
-  margin-top: 20px;
-  list-style: none;
-  padding: 0;
-`;
+    margin-top: 20px;
+    list-style: none;
+    padding: 0;
+`
 
 const ChildInfoItem = styled.li`
-  margin-bottom: 10px;
-`;
+    margin-bottom: 10px;
+`
 
 const ScheduleList = styled.ul`
-  margin-top: 20px;
-  list-style: none;
-  padding: 0;
-`;
+    margin-top: 20px;
+    list-style: none;
+    padding: 0;
+`
 
 const ScheduleItem = styled.li`
-  margin-bottom: 20px;
-`;
+    margin-bottom: 20px;
+`
 
 const TimeInput = styled.input`
-  margin-left: 10px;
-`;
+    margin-left: 10px;
+`
 
 const UpdateButton = styled.button`
-  margin-left: 10px;
-  padding: 5px 10px;
-  background-color: #007bff;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-`;
+    margin-left: 10px;
+    padding: 5px 10px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+`

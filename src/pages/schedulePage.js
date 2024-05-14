@@ -9,7 +9,6 @@
 
 // // export default SchedulePage
 
-
 // import React from 'react';
 // import { Routes, Route, useParams, useNavigate } from 'react-router-dom';
 // import ChildSchedule from '../components/ChildSchedule';
@@ -37,7 +36,6 @@
 // const SchedulePage = () => {
 //   const navigate = useNavigate(); // Import useNavigate from react-router-dom
 
-
 //   // Function to handle the back button click
 //   const handleBack = () => {
 //     navigate(-1); // Go back to the previous page
@@ -57,36 +55,47 @@
 
 // export default SchedulePage;
 
-
-import React from 'react';
-import { Routes, Route, useParams, useNavigate } from 'react-router-dom';
-import ChildSchedule from '../components/ChildSchedule';
-import ShowSchedule from '../components/ShowSchedule';
-import RequestedSchedule from '../components/RequestedSchedule';
+import React from 'react'
+import { Routes, Route, useParams, useNavigate } from 'react-router-dom'
+import ChildSchedule from '../components/schedules/ChildSchedule'
+import ShowSchedule from '../components/schedules/ShowSchedule'
+import RequestedSchedule from '../components/schedules/RequestedSchedule'
 
 const SchedulePage = () => {
-  const { childId } = useParams();
-  const navigate = useNavigate(); // Import useNavigate from react-router-dom
+    const { childId } = useParams()
+    const navigate = useNavigate() // Import useNavigate from react-router-dom
 
-  // Function to handle the back button click
-  const handleBack = () => {
-    navigate(-1); // Go back to the previous page
-  };
+    // Function to handle the back button click
+    const handleBack = () => {
+        navigate(-1) // Go back to the previous page
+    }
 
-  return (
-    <div>
-      <button style={{ marginTop: '200px' }} onClick={handleBack}>Back</button> {/* Back button */}
-      {/* Nested routes for ChildSchedule and ShowSchedule components */}
-      <Routes>
-        {/* Pass childId as a prop to the ChildSchedule component */}
-        <Route path="change" element={<ChildSchedule childId={childId} />} />
-        {/* Pass childId as a prop to the ShowSchedule component */}
-        <Route path="show" element={<ShowSchedule childId={childId} />} />
-        {/* Pass childId as a prop to the RequestedSchedule component */}
-        <Route path="requested" element={<RequestedSchedule childId={childId} />} />
-      </Routes>
-    </div>
-  );
-};
+    return (
+        <div>
+            <button style={{ marginTop: '200px' }} onClick={handleBack}>
+                Back
+            </button>{' '}
+            {/* Back button */}
+            {/* Nested routes for ChildSchedule and ShowSchedule components */}
+            <Routes>
+                {/* Pass childId as a prop to the ChildSchedule component */}
+                <Route
+                    path="change"
+                    element={<ChildSchedule childId={childId} />}
+                />
+                {/* Pass childId as a prop to the ShowSchedule component */}
+                <Route
+                    path="show"
+                    element={<ShowSchedule childId={childId} />}
+                />
+                {/* Pass childId as a prop to the RequestedSchedule component */}
+                <Route
+                    path="requested"
+                    element={<RequestedSchedule childId={childId} />}
+                />
+            </Routes>
+        </div>
+    )
+}
 
-export default SchedulePage;
+export default SchedulePage

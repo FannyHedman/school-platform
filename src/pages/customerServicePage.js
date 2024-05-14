@@ -1,5 +1,5 @@
 import React from 'react'
-import CustomerService from '../components/CustomerService'
+import CustomerService from '../components/contact/CustomerService'
 
 const CustomerServicePage = () => {
   return (

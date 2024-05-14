@@ -142,12 +142,12 @@ import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { useParams, useNavigate } from 'react-router-dom'
 import ConfirmationModalReq from './ConfirmationModalReq'
-import { fetchWeeks, fetchChildProfile } from '../apiService'
-import Sidebar from './SideBar'
+import { fetchWeeks, fetchChildProfile } from '../../apiService'
+import Sidebar from '../navigation/SideBar'
 import styled from 'styled-components'
-import { useLanguage } from '../components/language/LanguageContext'
-import en from '../components/language/languages/EN.json'
-import se from '../components/language/languages/SE.json'
+import { useLanguage } from '../language/LanguageContext'
+import en from '../language/languages/EN.json'
+import se from '../language/languages/SE.json'
 
 const RequestedSchedule = () => {
     const [weeks, setWeeks] = useState([])
