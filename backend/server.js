@@ -5,6 +5,10 @@ import cors from 'cors'
 import bodyParser from 'body-parser'
 import { request } from 'http'
 import { readFileSync } from 'fs';
+import jwt from 'jsonwebtoken';
+import authenticateToken from '../src/middleware/authenticateToken.js';
+
+
 
 
 const { Client } = pkg
@@ -50,8 +54,76 @@ app.get('/accounts', async (req, res) => {
     }
 })
 
-app.get('/accounts/:userId', async (req, res) => {
-    const { userId } = req.params
+// const authenticateToken = (req, res, next) => {
+//   const token = req.headers.authorization;
+//   if (!token) {
+//       return res.status(401).send('Unauthorized');
+//   }
+
+//   jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
+//       if (err) {
+//           return res.status(403).send('Forbidden');
+//       }
+//       req.user = decodedToken;
+//       next();
+//   });
+// };
+
+app.get('/my-account', authenticateToken, async (req, res) => {
+  const authenticatedUserId = req.user.userId;
+
+  try {
+    const parentQuery = await client.query(
+        'SELECT username, parent_name FROM accounts WHERE id = $1',
+        [authenticatedUserId]
+    )
+
+    const childrenQuery = await client.query(
+        'SELECT name, date_of_birth, school, child_id, school_id FROM children WHERE parent_id = $1',
+        [authenticatedUserId]
+    )
+
+    if (parentQuery.rows.length === 0) {
+        res.status(404).send('User not found')
+        return
+    }
+
+    const userData = {
+        parent_name: parentQuery.rows[0].parent_name,
+        children: childrenQuery.rows.map((child) => {
+            const today = new Date()
+            const birthDate = new Date(child.date_of_birth)
+            let age = today.getFullYear() - birthDate.getFullYear()
+            const monthDiff = today.getMonth() - birthDate.getMonth()
+            if (
+                monthDiff < 0 ||
+                (monthDiff === 0 && today.getDate() < birthDate.getDate())
+            ) {
+                age--
+            }
+
+            return {
+                id: child.child_id,
+                name: child.name,
+                age: age,
+                school: child.school,
+                schoolId: child.school_id
+            }
+        })
+    }
+
+    res.status(200).json(userData)
+} catch (error) {
+    console.error('Error fetching user profile:', error)
+    res.status(500).send('Internal Server Error')
+}
+});
+
+
+
+app.get('/accounts/:userId', authenticateToken, async (req, res) => {
+    const userId  = req.params.userId;
+    const authenticatedUserId = req.user.userId;
     // try {
     //     const result = await client.query('SELECT * FROM accounts WHERE id = $1', [userId]);
     //     res.json(result.rows);
@@ -59,6 +131,9 @@ app.get('/accounts/:userId', async (req, res) => {
     //     console.error(err);
     //     res.sendStatus(500);
     // }
+    if (userId === authenticatedUserId) {
+      return res.status(403).send('Forbidden');
+  }
 
     try {
         const parentQuery = await client.query(
@@ -107,6 +182,15 @@ app.get('/accounts/:userId', async (req, res) => {
     }
 })
 
+// const jwt = require('jsonwebtoken');
+
+// Function to generate JWT token with user ID included
+const generateAuthToken = (userId) => {
+    // Include user ID in the token payload
+    const token = jwt.sign({ userId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    return token;
+};
+
 app.post('/accounts', async (req, res) => {
     const { username, password } = req.body
     const values = [username, password]
@@ -121,6 +205,10 @@ app.post('/accounts', async (req, res) => {
     )
 
     if (user) {
+
+      // const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+      const token = generateAuthToken(user.id);
+      console.log('token:', token)
         // Fetch children and schools associated with the user
         const childrenQuery = await client.query(
             'SELECT child_id FROM children WHERE parent_id = $1',
@@ -138,7 +226,7 @@ app.post('/accounts', async (req, res) => {
             // schools: schoolsQuery.rows.map(school => school.id)
         }
 
-        res.status(200).json(userData)
+        res.status(200).json({token, userData})
     } else {
         res.status(404).send('Not found')
     }

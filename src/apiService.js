@@ -12,15 +12,37 @@ export const jsonService = axios.create({
   jsonBaseURL
 });
 
-export const fetchUserData = async (userId) => {
-    try {
-        const response = await apiService.get(`/accounts/${userId}`)
-        return response.data
-    } catch (error) {
-        console.error('Error fetching user data:', error)
-        throw error
-    }
+// export const fetchUserData = async (userId) => {
+//     try {
+//       const token = localStorage.getItem('token')
+//       console.log('User ID (fetchUserData):', userId);
+//       console.log('Token (fetchUserData):', token);
+//         const response = await apiService.get(`/accounts/${userId}`, {
+//             headers: {
+//                 Authorization: `Bearer ${token}`
+//             }
+//         });
+//         return response.data;
+//     } catch (error) {
+//         console.error('Error fetching user data:', error)
+//         throw error
+//     }
+// }
+
+export const fetchUserData = async (token) => {
+  try {
+    const response = await apiService.get(`/my-account`, { // Update the URL here
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching user data:', error)
+    throw error
+  }
 }
+
 
 // export const fetchChildProfile = async (childId, schoolId) => {
 //     try {

@@ -7,29 +7,26 @@ import en from '../language/languages/EN.json'
 import se from '../language/languages/SE.json'
 import { fetchUserData } from '../../apiService'
 
-const UserProfile = ({}) => {
-    const { userId } = useParams()
+const UserProfile = () => {
+    // const { userId } = useParams()
     const [userData, setUserData] = useState({})
     const { language } = useLanguage()
     const lang = language === 'se' ? se : en
 
     useEffect(() => {
         const fetchData = async () => {
-            try {
-                const data = await fetchUserData(userId)
-                setUserData(data)
-            } catch (error) {
+          try {
+            const token = sessionStorage.getItem('token');
+            const data = await fetchUserData(token);
+            console.log('User Data:', data);
+            setUserData(data);
+        } catch (error) {
                 console.error('Error fetching user profile:', error)
             }
         }
 
         fetchData()
-    }, [userId])
-
-    //   const handleChangeChild = () => {
-    //     localStorage.removeItem('childId');
-    //     ;
-    // };
+    }, [])
 
     const handleChangeChild = (childId) => {
         localStorage.setItem('childId', childId)

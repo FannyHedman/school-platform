@@ -17,6 +17,7 @@ import { useEffect, useState } from 'react'
 import Sidebar from './components/navigation/SideBar'
 import ReportAbsence from './components/absence/ReportAbsence'
 import LunchMenu from './components/information/LunchMenu'
+import UserProfile from './components/profiles/UserProfile'
 // import NewsLetter from './components/news/NewsLetter'
 
 function App() {
@@ -24,17 +25,32 @@ function App() {
     const [childIds, setChildIds] = useState([])
     const [schoolId, setSchoolId] = useState('')
     const [childId, setChildId] = useState('')
+    // const [token, setToken] = useState('')
+    // sessionStorage.removeItem('token')
+
+
+    // const token = localStorage.getItem('token')
+    // const userToken = sessionStorage.getItem('userToken')
 
     useEffect(() => {
+
         const storedId = localStorage.getItem('userId')
         const storedChildIds = localStorage.getItem('childIds')
-        const storedSchoolId = localStorage.getItem('schoolId')
+        // const storedSchoolId = localStorage.getItem('schoolId')
         const storedChildId = localStorage.getItem('childId')
+        // const storedToken = sessionStorage.getItem('token')
+
+        console.log('Stored User ID:', storedId);
+        console.log('Stored Child IDs:', storedChildIds);
+        // console.log('Stored School ID:', storedSchoolId);
+        console.log('Stored Child ID:', storedChildId);
+        // console.log('Stored Token:', storedToken);
 
         setUserId(storedId)
         setChildIds(storedChildIds ? JSON.parse(storedChildIds) : [])
-        setSchoolId(storedSchoolId)
+        // setSchoolId(storedSchoolId)
         setChildId(storedChildId)
+        // setToken(storedToken)
     }, [])
     return (
         <div className="App">
@@ -54,8 +70,10 @@ function App() {
                         />
                         <Route
                             path="/profile/:userId"
-                            element={<Profile childId={childId} />}
+                            element={<UserProfile childId={childId} />}
                         />
+                        <Route path="/profile" element={<Profile childId={childId} />} />
+
                         <Route
                             path="/usercontact/:userId"
                             element={<UserContactDetails />}
