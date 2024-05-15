@@ -14,16 +14,10 @@ const Sidebar = ({ userId, childIds }) => {
 
     const location = useLocation() // Get current URL information
 
-    const handleChildChange = (childId) => {
-        // Update URL with selected childId (assuming you have a function to update URL)
-        // navigate(`/show/${childId}`); // Example using react-router-dom navigate
-    }
-
     return (
         <div>
             {!(
-                location.pathname === '/' ||
-                location.pathname.startsWith('/profile/')
+                location.pathname === '/' || location.pathname === '/profile'
             ) && (
                 <SidebarContainer>
                     <SidebarItem>
@@ -49,7 +43,7 @@ const Sidebar = ({ userId, childIds }) => {
                         <DropdownMenu>
                             <StyledLink
                                 to={`/show/${storedChildId || 'select-child'}`}
-                                onClick={() => handleChildChange(storedChildId)}
+
                             >
                                 <DropdownItem>
                                     {lang.view_schedule}
@@ -59,7 +53,7 @@ const Sidebar = ({ userId, childIds }) => {
                                 to={`/change/${
                                     storedChildId || 'select-child'
                                 }`}
-                                onClick={() => handleChildChange(storedChildId)}
+                               
                             >
                                 <DropdownItem>
                                     {lang.change_schedule}

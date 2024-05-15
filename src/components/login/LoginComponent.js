@@ -34,12 +34,22 @@ const LoginComponent = () => {
             // const id = response.data.id
             // navigate(`/profile/${id}`)
             // console.log('logged in successfully')
-            const userId = response.data.id // Retrieve user ID from response
-            const childIds = response.data.children
+            // const userId = response.data.id
+            // const childIds = response.data.children
+            const userId = response.data.userData.id
+            const childIds = response.data.userData.children
             localStorage.setItem('userId', userId) // Store user ID securely
             localStorage.setItem('childIds', JSON.stringify(childIds))
+            const token = response.data.token
+            sessionStorage.removeItem('token')
+            sessionStorage.setItem('token', token)
 
-            navigate(`/profile/${userId}`)
+            console.log('User ID:', userId)
+            console.log('Child IDs:', childIds)
+            console.log('Token:', token)
+
+            // navigate(`/profile/${userId}`)
+            navigate('/profile') 
             console.log('logged in successfully')
         } catch (err) {
             console.log(err)

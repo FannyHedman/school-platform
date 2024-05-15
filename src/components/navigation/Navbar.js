@@ -8,6 +8,7 @@ import en from '../language/languages/EN.json'
 import se from '../language/languages/SE.json'
 import { Link } from 'react-router-dom'
 import { useParams } from 'react-router-dom'
+import LogoutComponent from './LogoutComponent'
 
 const NavBar = ({ userId }) => {
     const { id } = useParams()
@@ -30,13 +31,16 @@ const NavBar = ({ userId }) => {
                 </NavLink>
                 {/* Conditionally render the "Skills" NavLink */}
                 {location.pathname !== '/' && (
-                    <NavLink href="#skills">{lang.navbar_howto}</NavLink>
+                    <div>
+                        <NavLink href="#skills">{lang.navbar_howto}</NavLink>
+                        <LogoutComponent />
+                    </div>
                 )}
                 <StyledLink to={`/customer-service/`}>
                     {lang.navbar_contact}
                 </StyledLink>
                 <StyledLink to={`/usercontact/${userId}`}>konto</StyledLink>
-                <LanguageSwitch />
+                <LanguageSwitch />{' '}
             </NavLinks>
             <MobileMenuIcon
                 onClick={toggleMobileMenu}
