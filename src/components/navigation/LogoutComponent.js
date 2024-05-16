@@ -9,7 +9,7 @@ const LogoutComponent = () => {
     localStorage.removeItem('childId')
     localStorage.removeItem('childIds')
     sessionStorage.removeItem('token')
-    navigate('/') 
+    navigate('/')
   }
 
   return (

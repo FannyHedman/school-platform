@@ -15,12 +15,12 @@ const UserProfile = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-          try {
-            const token = sessionStorage.getItem('token');
-            const data = await fetchUserData(token);
-            console.log('User Data:', data);
-            setUserData(data);
-        } catch (error) {
+            try {
+                const token = sessionStorage.getItem('token')
+                const data = await fetchUserData(token)
+                console.log('User Data:', data)
+                setUserData(data)
+            } catch (error) {
                 console.error('Error fetching user profile:', error)
             }
         }
@@ -76,6 +76,8 @@ const RightPanel = styled.div`
 
 const ParentName = styled.p`
     font-size: 36px;
+    /* font-family: "Rubik Doodle Shadow", system-ui; */
+    font-family: 'Titan One', sans-serif;
 `
 
 const UserMessage = styled.p`
@@ -90,11 +92,18 @@ const List = styled.ul`
 const ListItem = styled.li`
     margin-bottom: 30px;
     font-size: 36px;
+    font-family: 'Titan One', sans-serif;
 `
 
 const StyledLink = styled(Link)`
     text-decoration: none;
-    color: black;
+    color: white;
+    transition: transform 0.2s ease-in-out;
+
+    &:hover {
+        text-decoration: none;
+        transform: scale(1.1);
+    }
 `
 
 // import React, { useEffect, useState } from 'react';

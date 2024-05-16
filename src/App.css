@@ -1,4 +1,96 @@
+@import url('https://fonts.googleapis.com/css2?family=Caprasimo&family=Chonburi&family=Comfortaa:wght@300&family=Coming+Soon&family=DM+Serif+Display&family=Monoton&family=Open+Sans:wght@300&family=Reenie+Beanie&family=Rubik+Doodle+Shadow&family=Titan+One&display=swap');
+
+html,
+body {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    /* overflow-y: hidden; */
+    background-color: #f5daf0;
+    /* scroll-behavior: smooth; */
+}
+
+.navbar-link {
+    text-decoration: none;
+    border: 1px solid rgb(0, 0, 0);
+    border-radius: 6px;
+    padding: 10px;
+    color: rgb(0, 0, 0);
+    margin: 0 15px;
+    width: 30px;
+    transition: transform 0.2s ease-in-out;
+
+    &:hover {
+        text-decoration: none;
+        transform: scale(1.1);
+    }
+
+    @media (max-width: 767px) {
+        padding: 1%;
+    }
+}
+
 .container {
-  margin: 200px;
-  justify-content: center;
+    /* margin: 200px; */
+    padding: 200px;
+    margin-left: 450px;
+    justify-content: center;
+}
+
+#contact-container {
+    background-image: url('./assets//phones.jpg');
+    background-size: cover;
+}
+
+#show-schedule-container {
+    background-image: url('./assets/phones.jpg');
+    background-size: cover;
+}
+
+.start-page {
+    /* Set background image */
+    background-image: url('./assets//background1.jpg');
+
+    /* Adjust background size to cover the entire container */
+    background-size: cover;
+
+    /* Center the background image vertically and horizontally */
+    background-position: center;
+
+    /* Ensure the background image doesn't repeat */
+    background-repeat: no-repeat;
+
+    /* Add any additional styles as needed */
+    /* For example, you may want to set a height for the start page */
+    height: 100vh;
+}
+
+.child-name {
+    font-family: 'Caprasimo', sans-serif;
+    font-weight: normal;
+    font-size: 42px;
+    letter-spacing: 3px;
+    color: #000000;
+    text-align: center;
+    /* margin-top: 100px; */
+}
+
+.school-name {
+    font-family: 'open sans', sans-serif;
+    font-weight: bold;
+    font-size: 22px;
+    letter-spacing: 3px;
+    color: #000000;
+    text-align: center;
+    /* margin-top: 100px; */
+}
+
+.contact-name {
+    font-family: 'open sans', sans-serif;
+    font-weight: bold;
+    font-size: 18px;
+    letter-spacing: 3px;
+    color: #000000;
+    text-align: center;
 }

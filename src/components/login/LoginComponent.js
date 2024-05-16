@@ -49,7 +49,7 @@ const LoginComponent = () => {
             console.log('Token:', token)
 
             // navigate(`/profile/${userId}`)
-            navigate('/profile') 
+            navigate('/profile')
             console.log('logged in successfully')
         } catch (err) {
             console.log(err)
@@ -58,14 +58,14 @@ const LoginComponent = () => {
     }
 
     return (
-        <div style={{ marginTop: '100px' }}>
-            <Container>
-                <LeftDiv>
+        <div>
+            {/* <Container> */}
+                {/* <LeftDiv>
                     <LeftDivContainer>
                         <Heading>{lang.startpage_title}</Heading>
                     </LeftDivContainer>
-                </LeftDiv>
-                <RightDiv>
+                </LeftDiv> */}
+                {/* <RightDiv> */}
                     <LoginContainer>
                         <h1>Login</h1>
                         <Form onSubmit={handleSubmit}>
@@ -90,8 +90,8 @@ const LoginComponent = () => {
                             <Button type="submit">{lang.login_login}</Button>
                         </Form>
                     </LoginContainer>
-                </RightDiv>
-            </Container>
+                {/* </RightDiv> */}
+            {/* </Container> */}
         </div>
     )
 }
@@ -120,12 +120,44 @@ const Heading = styled.h1``
 const LoginContainer = styled.div`
     width: 300px;
     margin: 100px auto;
-    padding: 20px;
+    padding: 40px;
     border: 1px solid #ccc;
     border-radius: 5px;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
     background-color: #fff;
     text-align: center;
+    /* position: relative; */
+  /* z-index: 1; */
+  /* margin-top: 65%; */
+  width: 200px;
+  /* margin-left: -28%; */
+  /* height: 150px; */
+  background-color: white;
+  /* border: 4px solid #99c3ff; */
+  border: 2px solid pink;
+  border-radius: 5px;
+  /* box-shadow: 10px 10px 7px -5px rgba(0, 0, 0, 0.3); */
+  /* box-shadow: 5px 5px 0px #b0d0ff, 10px 10px 0px #c0daff; */
+  box-shadow: 6px 6px 0px red;
+  transition: transform 0.2s ease-in-out;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  /* Ipad */
+  @media (max-width: 1024px) {
+    margin-top: 50%;
+    width: 200px;
+    margin-left: -12%;
+    height: 250px;
+  }
+
+  /* Mobile */
+  @media (max-width: 767px) {
+    margin-left: 30%;
+    margin-top: 10%;
+  }
 `
 
 const Form = styled.form`
@@ -149,7 +181,7 @@ const Input = styled.input`
 const Button = styled.button`
     width: 100%;
     padding: 10px;
-    background-color: #007bff;
+    background-color: lightpink;
     color: #fff;
     border: none;
     border-radius: 3px;
@@ -157,6 +189,6 @@ const Button = styled.button`
     transition: background-color 0.3s ease;
 
     &:hover {
-        background-color: #0056b3;
+        background-color: pink;
     }
 `
