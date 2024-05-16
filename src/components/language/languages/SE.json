@@ -10,6 +10,10 @@
   "welcome_user": "Hej",
   "user_message": "Välkommen till skolplattformen. Välj ett barn för att se information och göra ändringar.",
 
+  "your_child": "Ditt barn",
+  "todays_meal": "Dagens lunch",
+  "todays_schedule": "Dagens schema",
+
   "absence": "Frånvaro",
   "view_absence": "Se frånvaro",
   "report_abscent": "Anmäl frånvaro",
@@ -45,6 +49,8 @@
 
   "back": "Tillbaka",
   "update": "Uppdatera",
+  "change_child": "Ändra barn",
+
 
   "start_time": "Börjar",
   "end_time": "Slutar",

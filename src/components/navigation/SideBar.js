@@ -20,6 +20,9 @@ const Sidebar = ({ userId, childIds }) => {
                 location.pathname === '/' || location.pathname === '/profile'
             ) && (
                 <SidebarContainer>
+                  <SidebarItem>
+                       <StyledLink to={`/childprofile/${storedChildId}`}>{lang.your_child}</StyledLink>
+                    </SidebarItem>
                     <SidebarItem>
                         {lang.absence}
                         <DropdownMenu>
@@ -53,7 +56,7 @@ const Sidebar = ({ userId, childIds }) => {
                                 to={`/change/${
                                     storedChildId || 'select-child'
                                 }`}
-                               
+
                             >
                                 <DropdownItem>
                                     {lang.change_schedule}
@@ -191,13 +194,14 @@ export default Sidebar
 const SidebarContainer = styled.div`
     position: fixed;
     top: 0;
-    right: 0;
-    margin-top: 80px;
+    left: 0;
+    /* margin-top: 80px; */
     height: 100vh;
-    width: 250px;
-    background-color: #333;
-    color: #fff;
+    width: 350px;
+    background-color: white;
+    color: black;
     padding: 20px;
+    padding-top: 120px;
     overflow-y: auto;
 `
 
@@ -211,7 +215,11 @@ const DropdownMenu = styled.div`
 const SidebarItem = styled.div`
     margin-bottom: 25px;
     text-align: left;
-    font-size: 22px;
+    font-size: 18px;
+    font-family: 'Rubik', sans-serif;
+    position: relative; /* Add position relative */
+    border-bottom: 2px solid black; /* Add border */
+    padding-bottom: 20px; /* Add padding bottom */
 
     &:hover ${DropdownMenu} {
         display: block;
@@ -230,5 +238,5 @@ const DropdownItem = styled.div`
 
 const StyledLink = styled(Link)`
     text-decoration: none;
-    color: white;
+    color: black;
 `

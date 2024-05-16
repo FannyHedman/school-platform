@@ -1,93 +1,10 @@
-// // import React, { useState, useEffect } from 'react';
-// // import axios from 'axios';
-// // import { useParams } from 'react-router-dom';
-// // import { fetchContacts } from '../apiService';
-
-// // const ContactComponent = () => {
-// //   const { type, schoolId } = useParams();
-
-// //   const [contactsData, setContactsData] = useState([]);
-
-// //   useEffect(() => {
-// //     const fetchData = async () => {
-// //       try {
-// //         const data = await fetchContacts(type, schoolId);
-// //         setContactsData(data);
-// //       } catch (error) {
-// //         console.error('Error fetching user profile:', error);
-// //       }
-// //     };
-
-// //     fetchData();
-// //   }, [type, schoolId]);
-
-// //   return (
-// //     <div style={{marginTop: '200px'}}>
-// //       <h1>{type}</h1>
-// //       <ul>
-// //         {contactsData.map((contact, index) => (
-// //           <li key={index}>
-// //             <p>Name: {contact.name}</p>
-// //             <p>Email: {contact.email}</p>
-// //             <p>Phone: {contact.phone}</p>
-// //           </li>
-// //         ))}
-// //       </ul>
-// //     </div>
-// //   );
-// // }
-
-// // export default ContactComponent;
-
-// import React, { useState, useEffect } from 'react';
-// import { useParams, useNavigate } from 'react-router-dom';
-// import { fetchContacts } from '../apiService';
-
-// const ContactComponent = () => {
-//   const { type, schoolId } = useParams();
-//   const [contactsData, setContactsData] = useState([]);
-//   const navigate = useNavigate(); // Import useNavigate from react-router-dom
-
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const data = await fetchContacts(type, schoolId);
-//         setContactsData(data);
-//       } catch (error) {
-//         console.error('Error fetching user profile:', error);
-//       }
-//     };
-
-//     fetchData();
-//   }, [type, schoolId]);
-
-//   // Function to handle the back button click
-//   const handleBack = () => {
-//     navigate(-1); // Go back to the previous page
-//   };
-
-//   return (
-//     <div style={{marginTop: '200px'}}>
-//       <h1>{type}</h1>
-//       <button onClick={handleBack}>Back</button> {/* Back button */}
-//       <ul>
-//         {contactsData.map((contact, index) => (
-//           <li key={index}>
-//             <p>Name: {contact.name}</p>
-//             <p>Email: {contact.email}</p>
-//             <p>Phone: {contact.phone}</p>
-//           </li>
-//         ))}
-//       </ul>
-//     </div>
-//   );
-// }
-
-// export default ContactComponent;
-
 import React, { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import { fetchChildProfile, fetchContacts } from '../../apiService'
+import styled from 'styled-components'
+import { useLanguage } from '../language/LanguageContext'
+import en from '../language/languages/EN.json'
+import se from '../language/languages/SE.json'
 
 const ContactComponent = () => {
     const { type, childId } = useParams()
@@ -95,13 +12,14 @@ const ContactComponent = () => {
     const [userData, setUserData] = useState({})
     const navigate = useNavigate()
 
+    const { language } = useLanguage()
+    const lang = language === 'se' ? se : en
+
     useEffect(() => {
         const fetchData = async () => {
             try {
                 const profileData = await fetchChildProfile(childId)
-                console.log('profileData:', profileData)
                 const schoolId = profileData?.children?.[0]?.schoolId
-                console.log('schoolId:', schoolId)
 
                 if (!schoolId) {
                     // Handle missing schoolId gracefully (e.g., display error message)
@@ -125,31 +43,114 @@ const ContactComponent = () => {
     }
 
     return (
-        <div>
-            <button onClick={handleBack} style={{ marginTop: '200px' }}>
-                Back
-            </button>
-
-            <ul style={{ marginTop: '150px' }}>
-                {userData.children &&
-                    userData.children.map((child, index) => (
-                        <li key={index}>
-                            <p>{child.name}</p>
-                            <p>{child.school}</p>
-                        </li>
-                    ))}
-            </ul>
-            <h2>{type}</h2>
-            <ul>
-                {contacts.map((contact, index) => (
-                    <li key={index}>
-                        <p>Name: {contact.name}</p>
-                        <p>Email: {contact.email}</p>
-                    </li>
-                ))}
-            </ul>
+        <div id="contact-container">
+            <Container className="container">
+                <ContactCard>
+                    <ChildList>
+                        {userData.children &&
+                            userData.children.map((child, index) => (
+                                <li key={index}>
+                                    <h3 className="child-name">{child.name}</h3>
+                                    <h2 className="school-name">
+                                        {child.school}
+                                    </h2>
+                                </li>
+                            ))}
+                        {type === 'teacher' && (
+                            <h3 className="contact-name">
+                                {lang.contact_teacher}
+                            </h3>
+                        )}
+                        {type === 'health' && (
+                            <h3 className="contact-name">
+                                {lang.contact_health}
+                            </h3>
+                        )}
+                        {type === 'management' && (
+                            <h3 className="contact-name">
+                                {lang.contact_management}
+                            </h3>
+                        )}
+                        {type === 'parent' && (
+                            <h3 className="contact-name">
+                                {lang.contact_parents}
+                            </h3>
+                        )}
+                    </ChildList>
+                    {/* <ContactsWrapper> */}
+                    {/* {type === 'teacher' && <h3 className='school-name'>{lang.contact_teacher}</h3>}
+                        {type === 'health' && <h3>{lang.contact_health}</h3>}
+                        {type === 'management' && (
+                            <h3>{lang.contact_management}</h3>
+                        )}
+                        {type === 'parent' && <h3>{lang.contact_parents}</h3>} */}
+                    <ul>
+                        {contacts.map((contact, index) => (
+                            <ContactItem key={index}>
+                                <p style={{ fontWeight: 'bold' }}>
+                                    {contact.name}
+                                </p>
+                                <p>{contact.email}</p>
+                                <p>{contact.phone_number}</p>
+                            </ContactItem>
+                        ))}
+                    </ul>
+                    {/* </ContactsWrapper> */}
+                </ContactCard>
+            </Container>
         </div>
     )
 }
 
 export default ContactComponent
+
+const Container = styled.div`
+    /* background-image: url('../../assets/background.jpg');
+    background-size: cover;
+    background-position: center;
+    padding: 20px;
+    min-height: 100vh; */
+`
+
+const BackButton = styled.button`
+    margin-bottom: 20px;
+`
+
+const ChildList = styled.ul`
+    list-style: none;
+    padding: 0;
+    /* margin-bottom: 20px; */
+`
+
+const ContactCard = styled.div`
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+
+    ul {
+        list-style: none;
+        /* padding: 0; */
+        padding: 30px;
+        margin: 0;
+    }
+`
+
+const ContactItem = styled.li`
+    margin-bottom: 50px;
+    position: relative;
+
+    &:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        bottom: -15px; /* Adjust this value based on your preference */
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: black;
+    }
+`
+const ContactsWrapper = styled.div`
+    /* margin-top: 50px; */
+`

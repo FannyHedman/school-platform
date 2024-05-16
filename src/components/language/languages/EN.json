@@ -10,6 +10,10 @@
   "welcome_user": "Hello",
   "user_message": "Welcome to the school portal. Choose a child to see more information.",
 
+  "your_child": "Your child",
+  "todays_meal": "Today's meal",
+  "todays_schedule": "Today's schedule",
+
   "absence": "Absence",
   "view_absence": "View absence",
   "report_todays_abscent": "Report absence today",
@@ -44,6 +48,7 @@
 
   "back": "Back",
   "update": "Update",
+  "change_child": "Change child",
 
   "start_time": "Start time",
   "end_time": "End time",
